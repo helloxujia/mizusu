@@ -342,7 +342,20 @@ fun installBoot(
         }
 
         LkmSelection.KmiNone -> {
-            // do nothing
+            // MizuSU: use our custom KO from assets
+            try {
+                val bundledKo = File(ksuApp.cacheDir, "mizusu_kernelsu.ko")
+                if (!bundledKo.exists()) {
+                    ksuApp.assets.open("mizusu_kernelsu.ko").use { input ->
+                        bundledKo.outputStream().use { output ->
+                            input.copyTo(output)
+                        }
+                    }
+                }
+                cmd += " -m ${bundledKo.absolutePath}"
+            } catch (_: Exception) {
+                // fallback to built-in KO
+            }
         }
     }
 
