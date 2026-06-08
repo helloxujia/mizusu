@@ -324,40 +324,14 @@ fun installBoot(
     }
 
     var lkmFile: File? = null
-    when (lkm) {
-        is LkmSelection.LkmUri -> {
-            lkmFile = with(resolver.openInputStream(lkm.uri)) {
-                val file = File(ksuApp.cacheDir, "kernelsu-tmp-lkm.ko")
-                file.outputStream().use { output ->
-                    this?.copyTo(output)
-                }
-
-                file
-            }
-            cmd += " -m ${lkmFile.absolutePath}"
+    // MizuSU: always use our bundled custom KO from assets
+    try {
+        val bundledKo = File(ksuApp.cacheDir, "mizusu.ko")
+        ksuApp.assets.open("mizusu_kernelsu.ko").use { input ->
+            bundledKo.outputStream().use { output -> input.copyTo(output) }
         }
-
-        is LkmSelection.KmiString -> {
-            cmd += " --kmi ${lkm.value}"
-        }
-
-        LkmSelection.KmiNone -> {
-            // MizuSU: use our custom KO from assets
-            try {
-                val bundledKo = File(ksuApp.cacheDir, "mizusu_kernelsu.ko")
-                if (!bundledKo.exists()) {
-                    ksuApp.assets.open("mizusu_kernelsu.ko").use { input ->
-                        bundledKo.outputStream().use { output ->
-                            input.copyTo(output)
-                        }
-                    }
-                }
-                cmd += " -m ${bundledKo.absolutePath}"
-            } catch (_: Exception) {
-                // fallback to built-in KO
-            }
-        }
-    }
+        cmd += " -m ${bundledKo.absolutePath}"
+    } catch (_: Exception) { }
 
     // output dir
     if (bootFile != null) {
