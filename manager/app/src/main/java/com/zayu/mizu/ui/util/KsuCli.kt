@@ -332,14 +332,20 @@ fun installBoot(
         val kmi = Regex("""(\d+)\.(\d+)\.\d+-android(\d+)""").find(release)?.let { mr ->
             val (major, minor, android) = mr.destructured
             "android${android}-${major}.${minor}"
-        } ?: "android12-5.10" // fallback
+        } ?: "android12-5.10"
         val koName = "${kmi}_kernelsu.ko"
+        // List available KOs in assets for debugging
+        val available = ksuApp.assets.list("")?.filter { it.endsWith(".ko") }?.joinToString() ?: "none"
+        Log.i("MizuSU", "KMI=$kmi from release=$release, using=$koName, available=$available")
         val bundledKo = File(ksuApp.cacheDir, koName)
         ksuApp.assets.open(koName).use { input ->
             bundledKo.outputStream().use { output -> input.copyTo(output) }
         }
+        Log.i("MizuSU", "Extracted KO: ${bundledKo.length()} bytes")
         cmd += " -m ${bundledKo.absolutePath}"
-    } catch (_: Exception) { }
+    } catch (e: Exception) {
+        Log.e("MizuSU", "Failed to use bundled KO, falling back to built-in", e)
+    }
 
     // output dir
     if (bootFile != null) {
