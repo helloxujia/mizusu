@@ -459,6 +459,7 @@ fun SettingPagerMiuix(
                                 onCheckedChange = actions.onSetAutoJailbreak
                             )
                         }
+
                         SwitchPreference(
                             title = "启动音效",
                             summary = "打开应用时播放随机音效",
