@@ -54,7 +54,9 @@ data class SettingsUiState(
     // Auto Jailbreak
     val autoJailbreak: Boolean = false,
     // Sound effect
-    val enableSoundEffect: Boolean = true
+    val enableSoundEffect: Boolean = true,
+    // Icon style
+    val iconStyle: Int = 0
 )
 
 @Immutable
@@ -73,6 +75,7 @@ data class SettingsScreenActions(
     val onSetEnableWebDebugging: (Boolean) -> Unit,
     val onSetAutoJailbreak: (Boolean) -> Unit,
     val onSetEnableSoundEffect: (Boolean) -> Unit,
+    val onSetIconStyle: (Int) -> Unit,
     val onOpenAbout: () -> Unit,
     val onSetAlternativeIcon: (Boolean) -> Unit,
     val onOpenTools: () -> Unit,

@@ -55,6 +55,7 @@ import com.zayu.mizu.ui.UiMode
 import com.zayu.mizu.ui.component.KsuIsValid
 import com.zayu.mizu.ui.component.material.SegmentedColumn
 import com.zayu.mizu.ui.component.material.SegmentedDropdownItem
+import com.zayu.mizu.ui.component.material.SegmentedItem
 import com.zayu.mizu.ui.component.material.SegmentedListItem
 import com.zayu.mizu.ui.component.material.SegmentedSwitchItem
 import com.zayu.mizu.ui.component.material.SendLogBottomSheet
@@ -77,6 +78,7 @@ fun SettingPagerMaterial(
     val snackBarHost = remember { SnackbarHostState() }
     val showUninstallDialog = rememberSaveable { mutableStateOf(false) }
     var showBottomSheet by remember { mutableStateOf(false) }
+    var showIconPicker by remember { mutableStateOf(false) }
 
     UninstallDialog(
         show = showUninstallDialog.value,
@@ -151,12 +153,11 @@ fun SettingPagerMaterial(
                         )
                     }
                     add {
-                        SegmentedSwitchItem(
-                            icon = Icons.Rounded.Android,
-                            title = stringResource(id = R.string.icon_switch_title),
-                            summary = stringResource(id = R.string.icon_switch_summary),
-                            checked = uiState.alternativeIcon,
-                            onCheckedChange = actions.onSetAlternativeIcon
+                        SegmentedListItem(
+                            headlineContent = { Text("自定义图标") },
+                            supportingContent = { Text("选择管理器图标样式") },
+                            leadingContent = { Icon(Icons.Filled.Palette, null) },
+                            onClick = { showIconPicker = true }
                         )
                     }
                 }

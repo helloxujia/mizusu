@@ -38,6 +38,10 @@ class SettingsRepositoryImpl : SettingsRepository {
         get() = prefs.getBoolean("use_alt_icon", false)
         set(value) = prefs.edit { putBoolean("use_alt_icon", value)}
 
+    override var iconStyle: Int
+        get() = prefs.getInt("icon_style", 0)
+        set(value) = prefs.edit { putInt("icon_style", value) }
+
     override var themeMode: Int
         get() = prefs.getInt("color_mode", 0)
         set(value) = prefs.edit { putInt("color_mode", value) }

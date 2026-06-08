@@ -90,6 +90,32 @@
             </intent-filter>
         </activity-alias>
 
+        <activity-alias
+            android:name=".ui.MainActivityAlias2"
+            android:targetActivity=".ui.MainActivity"
+            android:exported="true"
+            android:enabled="false"
+            android:icon="@mipmap/ic_launcher_alt2"
+            android:roundIcon="@mipmap/ic_launcher_alt2">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".ui.MainActivityAlias3"
+            android:targetActivity=".ui.MainActivity"
+            android:exported="true"
+            android:enabled="false"
+            android:icon="@mipmap/ic_launcher_alt3"
+            android:roundIcon="@mipmap/ic_launcher_alt3">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
         <activity
             android:name=".ui.webui.WebUIActivity"
             android:autoRemoveFromRecents="true"

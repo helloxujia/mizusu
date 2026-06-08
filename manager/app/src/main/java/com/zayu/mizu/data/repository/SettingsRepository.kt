@@ -5,6 +5,7 @@ interface SettingsRepository {
     var checkUpdate: Boolean
     var checkModuleUpdate: Boolean
     var alternativeIcon : Boolean
+    var iconStyle: Int
     var themeMode: Int
     var miuixMonet: Boolean
     var keyColor: Int

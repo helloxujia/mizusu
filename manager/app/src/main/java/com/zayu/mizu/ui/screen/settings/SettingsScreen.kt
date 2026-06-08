@@ -48,6 +48,7 @@ fun SettingPager(
         onSetEnableWebDebugging = viewModel::setEnableWebDebugging,
         onSetAutoJailbreak = viewModel::setAutoJailbreak,
         onSetEnableSoundEffect = viewModel::setEnableSoundEffect,
+        onSetIconStyle = { style -> viewModel.setIconStyle(context, style) },
         onOpenAbout = { navigator.push(Route.About) },
         onSetAlternativeIcon = { enabled -> viewModel.setAlternativeIcon(context, enabled) },
         onOpenTools = { navigator.push(Route.Tool) },
