@@ -326,18 +326,13 @@ fun installBoot(
     var lkmFile: File? = null
     // MizuSU: auto-select correct KMI KO from bundled assets
     try {
-        // Detect KMI from kernel release (e.g., "5.10.236-android12-9-..." -> "android12-5.10")
+        // Parse KMI from kernel release (e.g., "5.10.236-android12-9-..." -> "android12-5.10")
+        // or "6.12.23-android16-5-..." -> "android16-6.12")
         val release = Os.uname().release
-        val kmi = when {
-            release.contains("android12-5.10") -> "android12-5.10"
-            release.contains("android13-5.10") -> "android13-5.10"
-            release.contains("android13-5.15") -> "android13-5.15"
-            release.contains("android14-5.15") -> "android14-5.15"
-            release.contains("android14-6.1")  -> "android14-6.1"
-            release.contains("android15-6.6")  -> "android15-6.6"
-            release.contains("android16-6.12") -> "android16-6.12"
-            else -> "android12-5.10" // fallback
-        }
+        val kmi = Regex("""(\d+)\.(\d+)\.\d+-android(\d+)""").find(release)?.let { mr ->
+            val (major, minor, android) = mr.destructured
+            "android${android}-${major}.${minor}"
+        } ?: "android12-5.10" // fallback
         val koName = "${kmi}_kernelsu.ko"
         val bundledKo = File(ksuApp.cacheDir, koName)
         ksuApp.assets.open(koName).use { input ->
