@@ -160,6 +160,14 @@ fun SettingPagerMiuix(
                         SwitchPreference(
                             title = "版本检测警告",
                             summary = "管理器与驱动版本不匹配时显示警告",
+                            startAction = {
+                                Icon(
+                                    Icons.Rounded.Settings,
+                                    modifier = Modifier.padding(end = 6.dp),
+                                    contentDescription = "版本检测警告",
+                                    tint = colorScheme.onBackground
+                                )
+                            },
                             checked = uiState.checkVersionMatch,
                             onCheckedChange = actions.onSetCheckVersionMatch
                         )
