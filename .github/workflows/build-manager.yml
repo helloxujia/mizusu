@@ -164,6 +164,7 @@ jobs:
 
       - name: Build with Gradle
         run: |
+          chmod +x gradlew
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             ./gradlew clean assembleRelease -PIS_PR_BUILD=true
           else
