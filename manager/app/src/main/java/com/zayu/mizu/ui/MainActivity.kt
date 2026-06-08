@@ -134,7 +134,9 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        playRandomSound()
+        if (getSharedPreferences("settings", MODE_PRIVATE).getBoolean("enable_sound_effect", true)) {
+            playRandomSound()
+        }
         intentStateValue = savedInstanceState?.getInt(KEY_INTENT_STATE, 0) ?: 0
         intentStateFlow.value = intentStateValue
 

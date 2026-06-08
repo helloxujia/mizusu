@@ -102,6 +102,7 @@ class SettingsViewModel(
                     isDefaultUmountModules = isDefaultUmountModules,
                     isLkmMode = isLkmMode,
                     autoJailbreak = autoJailbreak,
+                    enableSoundEffect = repo.enableSoundEffect,
                     isLateLoadMode = isLateLoadMode,
                 )
             }
@@ -295,6 +296,11 @@ class SettingsViewModel(
     fun setAutoJailbreak(enabled: Boolean) {
         repo.autoJailbreak = enabled
         _uiState.update { it.copy(autoJailbreak = enabled) }
+    }
+
+    fun setEnableSoundEffect(enabled: Boolean) {
+        repo.enableSoundEffect = enabled
+        _uiState.update { it.copy(enableSoundEffect = enabled) }
     }
 
     fun setSulogEnabled(enabled: Boolean) {

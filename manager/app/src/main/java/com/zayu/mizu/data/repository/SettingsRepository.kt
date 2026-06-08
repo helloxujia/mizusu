@@ -18,6 +18,7 @@ interface SettingsRepository {
     var enableWebDebugging: Boolean
     var showFullStatus: Boolean
     var autoJailbreak: Boolean
+    var enableSoundEffect: Boolean
 
     suspend fun getSuCompatStatus(): String
     suspend fun getSuCompatPersistValue(): Long?

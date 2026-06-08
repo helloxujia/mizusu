@@ -103,6 +103,10 @@ class SettingsRepositoryImpl : SettingsRepository {
             }
         }
 
+    override var enableSoundEffect: Boolean
+        get() = prefs.getBoolean("enable_sound_effect", true)
+        set(value) = prefs.edit { putBoolean("enable_sound_effect", value) }
+
     override suspend fun getSuCompatStatus(): String = getFeatureStatus("su_compat")
 
     override suspend fun getSuCompatPersistValue(): Long? = getFeaturePersistValue("su_compat")
