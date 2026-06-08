@@ -1,11 +1,14 @@
 package com.zayu.mizu.ui.screen.settings
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.rememberScrollState
@@ -29,9 +32,12 @@ import androidx.compose.material.icons.filled.Update
 import androidx.compose.material.icons.rounded.Android
 import androidx.compose.material.icons.rounded.Dashboard
 import androidx.compose.material.icons.rounded.UploadFile
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeFlexibleTopAppBar
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
@@ -45,6 +51,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
@@ -430,6 +437,39 @@ fun SettingPagerMaterial(
                 SendLogBottomSheet(
                     onDismiss = { showBottomSheet = false },
                     snackbarHostState = snackBarHost,
+                )
+            }
+            if (showIconPicker) {
+                val styles = listOf("默认", "蓝色", "粉色")
+                val selected = remember { mutableStateOf(uiState.iconStyle) }
+                AlertDialog(
+                    onDismissRequest = { showIconPicker = false },
+                    title = { Text("选择图标") },
+                    text = {
+                        Column {
+                            styles.forEachIndexed { index, name ->
+                                Row(
+                                    modifier = Modifier.fillMaxWidth().clickable { selected.value = index },
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    RadioButton(
+                                        selected = selected.value == index,
+                                        onClick = { selected.value = index }
+                                    )
+                                    Text("  $name", modifier = Modifier.padding(start = 8.dp))
+                                }
+                            }
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            actions.onSetIconStyle(selected.value)
+                            showIconPicker = false
+                        }) { Text("确定") }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showIconPicker = false }) { Text("取消") }
+                    }
                 )
             }
             Spacer(modifier = Modifier.height(bottomInnerPadding))
