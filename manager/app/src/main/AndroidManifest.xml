@@ -23,7 +23,7 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true"
         android:theme="@style/Theme.KernelSU"
-        android:zygotePreloadName="com.sukisu.ultra.magica.AppZygotePreload"
+        android:zygotePreloadName="com.zayu.mizu.magica.AppZygotePreload"
         tools:targetApi="R">
         <activity
             android:name=".ui.MainActivity"
@@ -133,7 +133,7 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
             <intent-filter>
-                <action android:name="com.sukisu.ultra.magica.LAUNCH" />
+                <action android:name="com.zayu.mizu.magica.LAUNCH" />
             </intent-filter>
         </receiver>
     </application>

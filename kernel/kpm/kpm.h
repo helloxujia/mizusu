@@ -5,9 +5,9 @@
 #include <linux/ioctl.h>
 #include "uapi/supercall.h"
 
-int sukisu_handle_kpm(unsigned long control_code, unsigned long arg3,
+int mizusu_handle_kpm(unsigned long control_code, unsigned long arg3,
                       unsigned long arg4, unsigned long result_code);
-int sukisu_is_kpm_control_code(unsigned long control_code);
+int mizusu_is_kpm_control_code(unsigned long control_code);
 int do_kpm(void __user *arg);
 
 /* KPM Control Code */

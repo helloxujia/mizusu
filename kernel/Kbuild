@@ -84,8 +84,8 @@ obj-$(CONFIG_KSU) += kernelsu.o
 
 MDIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
-REPO_OWNER  := SukiSU-Ultra
-REPO_NAME   := SukiSU-Ultra
+REPO_OWNER  := zayu
+REPO_NAME   := mizusu
 REPO_BRANCH := main
 
 VERSION_BASE    := 40000
@@ -117,12 +117,15 @@ ccflags-y += -DKSU_VERSION=$(KSU_VERSION)
 ccflags-y += -DKSU_VERSION_FULL=\"$(KSU_VERSION_FULL)\"
 
 ifndef KSU_EXPECTED_SIZE
-KSU_EXPECTED_SIZE := 0x35c
+KSU_EXPECTED_SIZE := 0x2e8
 endif
 
 ifndef KSU_EXPECTED_HASH
-KSU_EXPECTED_HASH := 947ae944f3de4ed4c21a7e4f7953ecf351bfa2b36239da37a34111ad29993eef
+KSU_EXPECTED_HASH := defc6d2335cc2b614b7400ea988497b85a5d99220badf14104612769f299a1ce
 endif
+
+# MizuSU manager package name
+KSU_MANAGER_PACKAGE := com.zayu.mizu
 
 ifdef KSU_MANAGER_PACKAGE
 ccflags-y += -DKSU_MANAGER_PACKAGE=\"$(KSU_MANAGER_PACKAGE)\"

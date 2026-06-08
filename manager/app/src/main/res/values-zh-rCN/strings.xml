@@ -356,7 +356,7 @@
     <string name="kpm_args">参数</string>
     <string name="kpm_control">执行</string>
     <string name="close_notice">关闭</string>
-    <string name="kernel_module_notice">以下内核模块功能由 KernelPatch 开发，并经过修改后加入了 SukiSU Ultra 的内核模块功能</string>
+    <string name="kernel_module_notice">以下内核模块功能由 KernelPatch 开发，并经过修改后加入了 MizuSU 的内核模块功能</string>
     <string name="kpm_control_success">成功</string>
     <string name="kpm_control_failed">失败</string>
     <string name="not_supported">不支持</string>
