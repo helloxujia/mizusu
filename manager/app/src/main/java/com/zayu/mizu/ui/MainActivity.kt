@@ -1,5 +1,7 @@
 package com.zayu.mizu.ui
 
+import android.media.MediaPlayer
+import kotlin.random.Random
 import androidx.compose.runtime.mutableIntStateOf
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -116,10 +118,23 @@ class MainActivity : ComponentActivity() {
             return intentStateFlow
         }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
-    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+    private fun playRandomSound() {
+        try {
+            val sounds = assets.list("sounds")?.filter { it.endsWith(".mp3") } ?: return
+            if (sounds.isEmpty()) return
+            val fd = assets.openFd("sounds/${sounds[Random.nextInt(sounds.size)]}")
+            val mp = MediaPlayer().apply {
+                setDataSource(fd.fileDescriptor, fd.startOffset, fd.length)
+                setOnCompletionListener { it.release() }
+                prepare()
+                start()
+            }
+        } catch (_: Exception) { }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        playRandomSound()
         intentStateValue = savedInstanceState?.getInt(KEY_INTENT_STATE, 0) ?: 0
         intentStateFlow.value = intentStateValue
 
