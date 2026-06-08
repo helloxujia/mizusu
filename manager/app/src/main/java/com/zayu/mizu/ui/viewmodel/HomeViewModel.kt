@@ -65,6 +65,8 @@ class HomeViewModel : ViewModel() {
             isLateLoadMode = Natives.isLateLoadMode,
             checkUpdateEnabled = ksuApp.getSharedPreferences("settings", Context.MODE_PRIVATE)
                 .getBoolean("check_update", true),
+            checkVersionMatch = ksuApp.getSharedPreferences("settings", Context.MODE_PRIVATE)
+                .getBoolean("check_version_match", true),
             showFullStatus = ksuApp.getSharedPreferences("settings", Context.MODE_PRIVATE)
                 .getBoolean("show_fingerprint", true),
             latestVersionInfo = LatestVersionInfo(),

@@ -47,6 +47,7 @@ fun SettingPager(
         onSetDefaultUmountModules = viewModel::setDefaultUmountModules,
         onSetEnableWebDebugging = viewModel::setEnableWebDebugging,
         onSetAutoJailbreak = viewModel::setAutoJailbreak,
+        onSetCheckVersionMatch = viewModel::setCheckVersionMatch,
         onSetEnableSoundEffect = viewModel::setEnableSoundEffect,
         onSetIconStyle = { style -> viewModel.setIconStyle(context, style) },
         onOpenAbout = { navigator.push(Route.About) },

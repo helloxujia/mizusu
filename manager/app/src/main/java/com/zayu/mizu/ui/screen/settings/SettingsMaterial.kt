@@ -127,6 +127,14 @@ fun SettingPagerMaterial(
                                 checked = uiState.checkModuleUpdate,
                                 onCheckedChange = actions.onSetCheckModuleUpdate
                             )
+                        },
+                        {
+                            SegmentedSwitchItem(
+                                title = "版本检测警告",
+                                summary = "管理器与驱动版本不匹配时显示警告",
+                                checked = uiState.checkVersionMatch,
+                                onCheckedChange = actions.onSetCheckVersionMatch
+                            )
                         }
                     )
                 )

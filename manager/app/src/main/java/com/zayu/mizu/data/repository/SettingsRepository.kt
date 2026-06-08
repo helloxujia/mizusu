@@ -4,6 +4,7 @@ interface SettingsRepository {
     var uiMode: String
     var checkUpdate: Boolean
     var checkModuleUpdate: Boolean
+    var checkVersionMatch: Boolean
     var alternativeIcon : Boolean
     var iconStyle: Int
     var themeMode: Int

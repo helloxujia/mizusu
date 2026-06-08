@@ -103,6 +103,7 @@ class SettingsViewModel(
                     isLkmMode = isLkmMode,
                     autoJailbreak = autoJailbreak,
                     enableSoundEffect = repo.enableSoundEffect,
+                    checkVersionMatch = repo.checkVersionMatch,
                     iconStyle = repo.iconStyle,
                     isLateLoadMode = isLateLoadMode,
                 )
@@ -153,6 +154,11 @@ class SettingsViewModel(
         repo.alternativeIcon = enabled
         _uiState.update { it.copy(alternativeIcon = enabled) }
         com.zayu.mizu.ui.util.toggleLauncherIcon(context, enabled)
+    }
+
+    fun setCheckVersionMatch(enabled: Boolean) {
+        repo.checkVersionMatch = enabled
+        _uiState.update { it.copy(checkVersionMatch = enabled) }
     }
 
     fun setIconStyle(context: Context, style: Int) {

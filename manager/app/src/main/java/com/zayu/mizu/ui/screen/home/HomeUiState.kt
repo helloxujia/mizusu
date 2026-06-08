@@ -16,6 +16,7 @@ data class HomeUiState(
     val isRootAvailable: Boolean,
     val isSafeMode: Boolean,
     val isLateLoadMode: Boolean,
+    val checkVersionMatch: Boolean = true,
     val checkUpdateEnabled: Boolean,
     val latestVersionInfo: LatestVersionInfo,
     val currentManagerVersionCode: Long,
@@ -42,8 +43,8 @@ data class HomeUiState(
     val showKernelPrBuildWarning: Boolean
         get() = isManager && !isManagerPrBuild && isKernelPrBuild
 
-    // MizuSU: version mismatch is expected since APK/KO build independently
-    val showVersionMismatchWarning: Boolean = false
+    val showVersionMismatchWarning: Boolean
+        get() = checkVersionMatch && ksuVersion != null && ksuVersion.toLong() != currentManagerVersionCode
 
     val hasUpdate: Boolean
         get() = latestVersionInfo.versionCode > currentManagerVersionCode

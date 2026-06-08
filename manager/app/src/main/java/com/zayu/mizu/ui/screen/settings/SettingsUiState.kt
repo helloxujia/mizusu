@@ -53,6 +53,8 @@ data class SettingsUiState(
 
     // Auto Jailbreak
     val autoJailbreak: Boolean = false,
+    // Version check
+    val checkVersionMatch: Boolean = true,
     // Sound effect
     val enableSoundEffect: Boolean = true,
     // Icon style
@@ -75,6 +77,7 @@ data class SettingsScreenActions(
     val onSetEnableWebDebugging: (Boolean) -> Unit,
     val onSetAutoJailbreak: (Boolean) -> Unit,
     val onSetEnableSoundEffect: (Boolean) -> Unit,
+    val onSetCheckVersionMatch: (Boolean) -> Unit,
     val onSetIconStyle: (Int) -> Unit,
     val onOpenAbout: () -> Unit,
     val onSetAlternativeIcon: (Boolean) -> Unit,
