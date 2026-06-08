@@ -46,6 +46,21 @@ data class FlashResult(val code: Int, val err: String, val showReboot: Boolean) 
 object KsuCli {
     val SHELL: Shell = createRootShell()
     val GLOBAL_MNT_SHELL: Shell = createRootShell(true)
+
+    // Debug log buffer for volunteer troubleshooting (no root needed)
+    private val debugLogs = mutableListOf<String>()
+    fun debugLog(tag: String, msg: String) {
+        val line = "[${System.currentTimeMillis() % 100000}] $tag: $msg"
+        debugLogs.add(line)
+        Log.i(tag, msg)
+    }
+    fun getDebugInfo(): String = buildString {
+        appendLine("=== MizuSU Debug Info ===")
+        appendLine("Kernel: ${Os.uname().release}")
+        appendLine("App: ${ksuApp.packageManager.getPackageInfo(ksuApp.packageName, 0).versionName}")
+        appendLine("--- Log ---")
+        debugLogs.forEach { appendLine(it) }
+    }
 }
 
 fun getRootShell(globalMnt: Boolean = false): Shell {
@@ -336,15 +351,15 @@ fun installBoot(
         val koName = "${kmi}_kernelsu.ko"
         // List available KOs in assets for debugging
         val available = ksuApp.assets.list("")?.filter { it.endsWith(".ko") }?.joinToString() ?: "none"
-        Log.i("MizuSU", "KMI=$kmi from release=$release, using=$koName, available=$available")
+        KsuCli.debugLog("MizuSU", "KMI=$kmi release=$release ko=$koName avail=$available")
         val bundledKo = File(ksuApp.cacheDir, koName)
         ksuApp.assets.open(koName).use { input ->
             bundledKo.outputStream().use { output -> input.copyTo(output) }
         }
-        Log.i("MizuSU", "Extracted KO: ${bundledKo.length()} bytes")
+        KsuCli.debugLog("MizuSU", "Extracted KO: ${bundledKo.length()} bytes")
         cmd += " -m ${bundledKo.absolutePath}"
     } catch (e: Exception) {
-        Log.e("MizuSU", "Failed to use bundled KO, falling back to built-in", e)
+        KsuCli.debugLog("MizuSU", "KO FAILED: ${e.message}")
     }
 
     // output dir
