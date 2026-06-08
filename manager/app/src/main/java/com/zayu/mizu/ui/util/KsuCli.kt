@@ -324,10 +324,23 @@ fun installBoot(
     }
 
     var lkmFile: File? = null
-    // MizuSU: always use our bundled custom KO from assets
+    // MizuSU: auto-select correct KMI KO from bundled assets
     try {
-        val bundledKo = File(ksuApp.cacheDir, "mizusu.ko")
-        ksuApp.assets.open("mizusu_kernelsu.ko").use { input ->
+        // Detect KMI from kernel release (e.g., "5.10.236-android12-9-..." -> "android12-5.10")
+        val release = Os.uname().release
+        val kmi = when {
+            release.contains("android12-5.10") -> "android12-5.10"
+            release.contains("android13-5.10") -> "android13-5.10"
+            release.contains("android13-5.15") -> "android13-5.15"
+            release.contains("android14-5.15") -> "android14-5.15"
+            release.contains("android14-6.1")  -> "android14-6.1"
+            release.contains("android15-6.6")  -> "android15-6.6"
+            release.contains("android16-6.12") -> "android16-6.12"
+            else -> "android12-5.10" // fallback
+        }
+        val koName = "${kmi}_kernelsu.ko"
+        val bundledKo = File(ksuApp.cacheDir, koName)
+        ksuApp.assets.open(koName).use { input ->
             bundledKo.outputStream().use { output -> input.copyTo(output) }
         }
         cmd += " -m ${bundledKo.absolutePath}"
