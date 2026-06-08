@@ -1,6 +1,9 @@
 package com.zayu.mizu.ui.screen.settings
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -9,6 +12,10 @@ import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
@@ -34,8 +41,12 @@ import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Update
 import androidx.compose.material.icons.rounded.UploadFile
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -84,6 +95,7 @@ fun SettingPagerMiuix(
     val loadingDialog = rememberLoadingDialog()
     val showUninstallDialog = rememberSaveable { mutableStateOf(false) }
     val showSendLogDialog = rememberSaveable { mutableStateOf(false) }
+    var showIconPicker by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -180,19 +192,18 @@ fun SettingPagerMiuix(
                             },
                             onClick = actions.onOpenTheme
                         )
-                        SwitchPreference(
-                        title = stringResource(id = R.string.icon_switch_title),
-                        summary = stringResource(id = R.string.icon_switch_summary),
+                        ArrowPreference(
+                        title = "自定义图标",
+                        summary = "选择管理器图标样式",
                         startAction = {
                             Icon(
-                                Icons.Rounded.Android,
+                                Icons.Rounded.Palette,
                                 modifier = Modifier.padding(end = 6.dp),
-                                contentDescription = stringResource(id = R.string.icon_switch_title),
+                                contentDescription = "自定义图标",
                                 tint = colorScheme.onBackground
                             )
                         },
-                        checked = uiState.alternativeIcon,
-                        onCheckedChange = actions.onSetAlternativeIcon
+                        onClick = { showIconPicker = true }
                         )
                     }
 
@@ -529,6 +540,39 @@ fun SettingPagerMiuix(
                                 )
                             },
                             onClick = actions.onOpenAbout,
+                        )
+                    }
+                    if (showIconPicker) {
+                        val styles = listOf("默认", "风格2", "风格3")
+                        val selected = remember { mutableStateOf(uiState.iconStyle) }
+                        AlertDialog(
+                            onDismissRequest = { showIconPicker = false },
+                            title = { Text("选择图标") },
+                            text = {
+                                Column {
+                                    styles.forEachIndexed { index, name ->
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth().clickable { selected.value = index },
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            RadioButton(
+                                                selected = selected.value == index,
+                                                onClick = { selected.value = index }
+                                            )
+                                            Text("  $name", modifier = Modifier.padding(start = 8.dp))
+                                        }
+                                    }
+                                }
+                            },
+                            confirmButton = {
+                                TextButton(onClick = {
+                                    actions.onSetIconStyle(selected.value)
+                                    showIconPicker = false
+                                }) { Text("确定") }
+                            },
+                            dismissButton = {
+                                TextButton(onClick = { showIconPicker = false }) { Text("取消") }
+                            }
                         )
                     }
                     Spacer(Modifier.height(bottomInnerPadding))
