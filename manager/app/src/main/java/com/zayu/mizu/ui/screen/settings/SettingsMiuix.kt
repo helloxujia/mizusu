@@ -224,7 +224,7 @@ fun SettingPagerMiuix(
                             summary = "打开应用时播放随机音效",
                             startAction = {
                                 Icon(
-                                    Icons.Rounded.Settings,
+                                    Icons.Rounded.Palette,
                                     modifier = Modifier.padding(end = 6.dp),
                                     contentDescription = "启动音效",
                                     tint = colorScheme.onBackground
