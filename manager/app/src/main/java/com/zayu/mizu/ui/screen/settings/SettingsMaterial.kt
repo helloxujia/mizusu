@@ -31,6 +31,7 @@ import androidx.compose.material.icons.filled.RemoveModerator
 import androidx.compose.material.icons.filled.Update
 import androidx.compose.material.icons.rounded.Android
 import androidx.compose.material.icons.rounded.Dashboard
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.UploadFile
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -128,6 +129,7 @@ fun SettingPagerMaterial(
                         },
                         {
                             SegmentedSwitchItem(
+                                icon = Icons.Rounded.Settings,
                                 title = "版本检测警告",
                                 summary = "管理器与驱动版本不匹配时显示警告",
                                 checked = uiState.checkVersionMatch,

@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.media.MediaPlayer
 import android.util.Log
+import android.widget.Toast
 import com.zayu.mizu.ui.util.setLauncherIconStyle
 import kotlin.random.Random
 import androidx.compose.runtime.mutableIntStateOf
@@ -123,15 +124,21 @@ class MainActivity : ComponentActivity() {
             return intentStateFlow
         }
 
+    private var soundPlayer: MediaPlayer? = null
+
     private fun playRandomSound() {
         try {
             val sounds = assets.list("sounds")?.filter { it.endsWith(".mp3") } ?: return
             if (sounds.isEmpty()) return
             val name = "sounds/${sounds[Random.nextInt(sounds.size)]}"
             val fd = assets.openFd(name)
-            val mp = MediaPlayer().apply {
+            soundPlayer?.release()
+            soundPlayer = MediaPlayer().apply {
                 setDataSource(fd.fileDescriptor, fd.startOffset, fd.length)
-                setOnCompletionListener { it.release() }
+                setOnCompletionListener {
+                    it.release()
+                    soundPlayer = null
+                }
                 prepare()
                 start()
             }
@@ -235,6 +242,7 @@ class MainActivity : ComponentActivity() {
                                             style = s
                                             prefs.edit().putInt("icon_style", s).apply()
                                             setLauncherIconStyle(activity, s)
+                                            Toast.makeText(activity, "图标已切换，返回桌面即可查看新图标", Toast.LENGTH_SHORT).show()
                                         },
                                         onBack = { navigator.pop() }
                                     )
@@ -280,6 +288,12 @@ class MainActivity : ComponentActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt(KEY_INTENT_STATE, intentStateValue)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        soundPlayer?.release()
+        soundPlayer = null
     }
 }
 
