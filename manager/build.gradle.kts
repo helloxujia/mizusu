@@ -13,8 +13,8 @@ val androidCompileNdkVersion: String by extra(libs.versions.ndk.get())
 val androidSourceCompatibility by extra(JavaVersion.VERSION_17)
 val androidTargetCompatibility by extra(JavaVersion.VERSION_17)
 // MizuSU: 手动定义版本号（修改这里即可）
-val managerVersionCode by extra(41300)
-val managerVersionName by extra("v4.1.3")
+val managerVersionCode by extra(40817)
+val managerVersionName by extra("杂鱼杂鱼MizuSU_v4.1.3")
 
 fun getGitCommitCount(): Int {
     val process = Runtime.getRuntime().exec(arrayOf("git", "rev-list", "--count", "HEAD"))
