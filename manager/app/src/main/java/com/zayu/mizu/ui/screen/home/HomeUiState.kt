@@ -17,6 +17,7 @@ data class HomeUiState(
     val isSafeMode: Boolean,
     val isLateLoadMode: Boolean,
     val checkVersionMatch: Boolean = true,
+    val showWelcome: Boolean = false,
     val checkUpdateEnabled: Boolean,
     val latestVersionInfo: LatestVersionInfo,
     val currentManagerVersionCode: Long,
@@ -56,5 +57,6 @@ data class HomeActions(
     val onSuperuserClick: () -> Unit,
     val onModuleClick: () -> Unit,
     val onOpenUrl: (String) -> Unit,
+    val onDismissWelcome: () -> Unit = {},
     val onJailbreakClick: () -> Unit = {},
 )

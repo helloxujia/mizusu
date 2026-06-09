@@ -114,6 +114,12 @@ fun HomePagerMiuix(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
+                        if (state.showWelcome && state.showFullStatus) {
+                            WarningCard(
+                                message = "MizuSU 是 KernelSU 的美化分支，您可以继续以普通 KernelSU 使用方法继续使用本管理器。本管理器只负责管理器 UI 美化，如有问题请转至官方 KernelSU。",
+                                onClick = actions.onDismissWelcome
+                            )
+                        }
                         if (state.showManagerPrBuildWarning && state.showFullStatus) {
                             WarningCard(stringResource(id = R.string.home_pr_build_warning))
                         } else if (state.showKernelPrBuildWarning && state.showFullStatus) {

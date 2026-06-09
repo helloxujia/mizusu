@@ -32,6 +32,10 @@ class HomeViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(buildState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
+    fun dismissWelcome() {
+        _uiState.update { it.copy(showWelcome = false) }
+    }
+
     fun refresh() {
         viewModelScope.launch {
             val baseState = withContext(Dispatchers.IO) { buildState() }

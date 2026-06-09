@@ -138,18 +138,6 @@ class MainActivity : ComponentActivity() {
         if (getSharedPreferences("settings", MODE_PRIVATE).getBoolean("enable_sound_effect", true)) {
             playRandomSound()
         }
-        // 首次激活欢迎弹窗
-        val prefs = getSharedPreferences("settings", MODE_PRIVATE)
-        if (prefs.getBoolean("show_welcome", true) && Natives.isManager) {
-            AlertDialog.Builder(this)
-                .setTitle("🐟 欢迎使用 MizuSU")
-                .setMessage("MizuSU 是 KernelSU 的美化分支。\n\n您可以继续以普通 KernelSU 使用方法继续使用本管理器。\n\n本管理器只负责管理器 UI 美化，如有问题请转至官方 KernelSU。")
-                .setPositiveButton("知道了") { _, _ ->
-                    prefs.edit().putBoolean("show_welcome", false).apply()
-                }
-                .setCancelable(false)
-                .show()
-        }
         intentStateValue = savedInstanceState?.getInt(KEY_INTENT_STATE, 0) ?: 0
         intentStateFlow.value = intentStateValue
 

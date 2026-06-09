@@ -1,4 +1,5 @@
 package com.zayu.mizu.ui.screen.home
+import android.content.Context
 
 import android.content.Intent
 import android.widget.Toast
@@ -56,6 +57,11 @@ fun HomePager(
         onSuperuserClick = { mainState.animateToPage(1) },
         onModuleClick = { mainState.animateToPage(2) },
         onOpenUrl = uriHandler::openUri,
+        onDismissWelcome = {
+            context.getSharedPreferences("settings", Context.MODE_PRIVATE)
+                .edit().putBoolean("show_welcome", false).apply()
+            viewModel.dismissWelcome()
+        },
         onJailbreakClick = {
             loadingDialog.showLoading()
             context.startService(Intent(context, MagicaService::class.java))
