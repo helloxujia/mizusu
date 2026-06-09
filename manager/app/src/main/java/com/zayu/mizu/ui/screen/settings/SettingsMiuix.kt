@@ -222,6 +222,14 @@ fun SettingPagerMiuix(
                         SwitchPreference(
                             title = "启动音效",
                             summary = "打开应用时播放随机音效",
+                            startAction = {
+                                Icon(
+                                    Icons.Rounded.Settings,
+                                    modifier = Modifier.padding(end = 6.dp),
+                                    contentDescription = "启动音效",
+                                    tint = colorScheme.onBackground
+                                )
+                            },
                             checked = uiState.enableSoundEffect,
                             onCheckedChange = actions.onSetEnableSoundEffect
                         )
