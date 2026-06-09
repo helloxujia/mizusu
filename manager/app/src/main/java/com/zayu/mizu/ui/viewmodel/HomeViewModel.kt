@@ -71,6 +71,8 @@ class HomeViewModel : ViewModel() {
                 .getBoolean("check_update", true),
             checkVersionMatch = ksuApp.getSharedPreferences("settings", Context.MODE_PRIVATE)
                 .getBoolean("check_version_match", true),
+            showWelcome = ksuApp.getSharedPreferences("settings", Context.MODE_PRIVATE)
+                .getBoolean("show_welcome", true),
             showFullStatus = ksuApp.getSharedPreferences("settings", Context.MODE_PRIVATE)
                 .getBoolean("show_fingerprint", true),
             latestVersionInfo = LatestVersionInfo(),
