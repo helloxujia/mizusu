@@ -29,12 +29,14 @@ fun CustomIconMaterial(
     onBack: () -> Unit
 ) {
     val icons = listOf(
-        IconPreset("图标1", R.drawable.ic_launcher_foreground),
+        IconPreset("图标1(默认)", R.drawable.ic_launcher_foreground),
         IconPreset("图标2", R.drawable.ic_launcher_foreground_alt),
         IconPreset("图标3", R.drawable.ic_launcher_foreground_alt2),
         IconPreset("图标4", R.drawable.ic_launcher_foreground_alt3),
         IconPreset("图标5", R.drawable.ic_launcher_foreground_alt4),
         IconPreset("图标6", R.drawable.ic_launcher_foreground_alt5),
+        IconPreset("图标7", R.drawable.ic_launcher_foreground_alt6),
+        IconPreset("图标8", R.drawable.ic_launcher_foreground_alt7),
     )
 
     Scaffold(

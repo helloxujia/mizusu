@@ -32,7 +32,9 @@ fun setLauncherIconStyle(context: Context, style: Int) {
         "${MainActivity::class.java.name}Alias2",
         "${MainActivity::class.java.name}Alias3",
         "${MainActivity::class.java.name}Alias4",
-        "${MainActivity::class.java.name}Alias5"
+        "${MainActivity::class.java.name}Alias5",
+        "${MainActivity::class.java.name}Alias6",
+        "${MainActivity::class.java.name}Alias7"
     )
 
     // Disable all
