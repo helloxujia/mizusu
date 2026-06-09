@@ -1,7 +1,10 @@
 package com.zayu.mizu.ui
 
 import android.app.AlertDialog
+import android.content.Context
 import android.media.MediaPlayer
+import android.util.Log
+import com.zayu.mizu.ui.util.setLauncherIconStyle
 import kotlin.random.Random
 import androidx.compose.runtime.mutableIntStateOf
 import android.annotation.SuppressLint
@@ -72,6 +75,7 @@ import com.zayu.mizu.ui.navigation3.rememberNavigator
 import com.zayu.mizu.ui.screen.about.AboutScreen
 import com.zayu.mizu.ui.screen.appprofile.AppProfileScreen
 import com.zayu.mizu.ui.screen.colorpalette.ColorPaletteScreen
+import com.zayu.mizu.ui.screen.customicon.CustomIconScreen
 import com.zayu.mizu.ui.screen.executemoduleaction.ExecuteModuleActionScreen
 import com.zayu.mizu.ui.screen.flash.FlashScreen
 import com.zayu.mizu.ui.screen.home.HomePager
@@ -123,7 +127,8 @@ class MainActivity : ComponentActivity() {
         try {
             val sounds = assets.list("sounds")?.filter { it.endsWith(".mp3") } ?: return
             if (sounds.isEmpty()) return
-            val fd = assets.openFd("sounds/${sounds[Random.nextInt(sounds.size)]}")
+            val name = "sounds/${sounds[Random.nextInt(sounds.size)]}"
+            val fd = assets.openFd(name)
             val mp = MediaPlayer().apply {
                 setDataSource(fd.fileDescriptor, fd.startOffset, fd.length)
                 setOnCompletionListener { it.release() }
@@ -135,7 +140,9 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (getSharedPreferences("settings", MODE_PRIVATE).getBoolean("enable_sound_effect", true)) {
+        val prefs = getSharedPreferences("settings", MODE_PRIVATE)
+        val soundEnabled = prefs.getBoolean("enable_sound_effect", true)
+        if (soundEnabled) {
             playRandomSound()
         }
         intentStateValue = savedInstanceState?.getInt(KEY_INTENT_STATE, 0) ?: 0
@@ -218,6 +225,20 @@ class MainActivity : ComponentActivity() {
                                 entry<Route.About> { AboutScreen() }
                                 entry<Route.Sulog> { SulogScreen() }
                                 entry<Route.ColorPalette> { ColorPaletteScreen() }
+                                entry<Route.CustomIcon> {
+                                    val activity = this@MainActivity
+                                    val prefs = activity.getSharedPreferences("settings", Context.MODE_PRIVATE)
+                                    var style by remember { mutableIntStateOf(prefs.getInt("icon_style", 0)) }
+                                    CustomIconScreen(
+                                        iconStyle = style,
+                                        onSelect = { s ->
+                                            style = s
+                                            prefs.edit().putInt("icon_style", s).apply()
+                                            setLauncherIconStyle(activity, s)
+                                        },
+                                        onBack = { navigator.pop() }
+                                    )
+                                }
                                 entry<Route.AppProfileTemplate> { AppProfileTemplateScreen() }
                                 entry<Route.TemplateEditor> { key -> TemplateEditorScreen(key.template, key.readOnly) }
                                 entry<Route.AppProfile> { key -> AppProfileScreen(key.uid) }

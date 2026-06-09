@@ -95,8 +95,6 @@ fun SettingPagerMiuix(
     val loadingDialog = rememberLoadingDialog()
     val showUninstallDialog = rememberSaveable { mutableStateOf(false) }
     val showSendLogDialog = rememberSaveable { mutableStateOf(false) }
-    var showIconPicker by remember { mutableStateOf(false) }
-
     Scaffold(
         topBar = {
             BlurredBar(backdrop) {
@@ -217,11 +215,11 @@ fun SettingPagerMiuix(
                                 tint = colorScheme.onBackground
                             )
                         },
-                        onClick = { showIconPicker = true }
+                        onClick = actions.onOpenCustomIcon
                         )
                         SwitchPreference(
                             title = "启动音效",
-                            summary = "打开应用时播放随机音效",
+                            summary = "杂鱼!杂鱼!～欧尼酱就是大杂鱼(◦`~´◦)",
                             startAction = {
                                 Icon(
                                     Icons.Rounded.Palette,
@@ -561,39 +559,6 @@ fun SettingPagerMiuix(
                                 )
                             },
                             onClick = actions.onOpenAbout,
-                        )
-                    }
-                    if (showIconPicker) {
-                        val styles = listOf("默认", "风格2", "风格3")
-                        val selected = remember { mutableStateOf(uiState.iconStyle) }
-                        AlertDialog(
-                            onDismissRequest = { showIconPicker = false },
-                            title = { Text("选择图标") },
-                            text = {
-                                Column {
-                                    styles.forEachIndexed { index, name ->
-                                        Row(
-                                            modifier = Modifier.fillMaxWidth().clickable { selected.value = index },
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            RadioButton(
-                                                selected = selected.value == index,
-                                                onClick = { selected.value = index }
-                                            )
-                                            Text("  $name", modifier = Modifier.padding(start = 8.dp))
-                                        }
-                                    }
-                                }
-                            },
-                            confirmButton = {
-                                TextButton(onClick = {
-                                    actions.onSetIconStyle(selected.value)
-                                    showIconPicker = false
-                                }) { Text("确定") }
-                            },
-                            dismissButton = {
-                                TextButton(onClick = { showIconPicker = false }) { Text("取消") }
-                            }
                         )
                     }
                     Spacer(Modifier.height(bottomInnerPadding))

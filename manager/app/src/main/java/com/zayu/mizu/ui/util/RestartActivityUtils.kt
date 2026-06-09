@@ -2,6 +2,7 @@ package com.zayu.mizu.ui.util
 
 import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import com.zayu.mizu.ui.MainActivity
 
@@ -29,7 +30,9 @@ fun setLauncherIconStyle(context: Context, style: Int) {
         null,  // 0 = default (MainActivity itself)
         "${MainActivity::class.java.name}Alias",
         "${MainActivity::class.java.name}Alias2",
-        "${MainActivity::class.java.name}Alias3"
+        "${MainActivity::class.java.name}Alias3",
+        "${MainActivity::class.java.name}Alias4",
+        "${MainActivity::class.java.name}Alias5"
     )
 
     // Disable all
@@ -60,4 +63,5 @@ fun setLauncherIconStyle(context: Context, style: Int) {
             PackageManager.DONT_KILL_APP
         )
     }
+
 }

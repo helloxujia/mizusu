@@ -50,6 +50,7 @@ fun SettingPager(
         onSetCheckVersionMatch = viewModel::setCheckVersionMatch,
         onSetEnableSoundEffect = viewModel::setEnableSoundEffect,
         onSetIconStyle = { style -> viewModel.setIconStyle(context, style) },
+        onOpenCustomIcon = { navigator.push(Route.CustomIcon) },
         onOpenAbout = { navigator.push(Route.About) },
         onSetAlternativeIcon = { enabled -> viewModel.setAlternativeIcon(context, enabled) },
         onOpenTools = { navigator.push(Route.Tool) },

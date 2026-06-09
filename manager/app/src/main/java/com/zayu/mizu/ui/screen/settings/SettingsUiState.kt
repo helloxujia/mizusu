@@ -79,6 +79,7 @@ data class SettingsScreenActions(
     val onSetEnableSoundEffect: (Boolean) -> Unit,
     val onSetCheckVersionMatch: (Boolean) -> Unit,
     val onSetIconStyle: (Int) -> Unit,
+    val onOpenCustomIcon: () -> Unit,
     val onOpenAbout: () -> Unit,
     val onSetAlternativeIcon: (Boolean) -> Unit,
     val onOpenTools: () -> Unit,
