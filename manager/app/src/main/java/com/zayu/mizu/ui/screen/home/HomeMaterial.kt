@@ -82,7 +82,7 @@ fun HomePagerMaterial(
             )
             if (state.showWelcome && state.showFullStatus) {
                 WarningCard(
-                    message = "MizuSU 是 KernelSU 的美化分支，您可以继续以普通 KernelSU 使用方法继续使用本管理器。本管理器只负责管理器 UI 美化，如有问题请转至官方 KernelSU。",
+                    message = "杂鱼~杂鱼~♪ 这里是 KernelSU 的美化分支 MizuSU！只是换了身衣服而已，内核功能完全一样哦！本管理器仅供分支测试使用，遇到问题请转至官方 KernelSU~",
                     onClick = actions.onDismissWelcome
                 )
             }

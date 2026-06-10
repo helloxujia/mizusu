@@ -2,9 +2,19 @@ package com.zayu.mizu.ui.screen.about
 
 import android.os.Build
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -181,6 +191,7 @@ private fun AboutContent(
     val enableBlur = LocalEnableBlur.current
     val effectBackground =
         remember(enableBlur) { isRuntimeShaderSupported() && enableBlur && Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM }
+    var expandedAck by remember { mutableStateOf(false) }
 
     val blendColors = remember(isInDark) {
         if (isInDark) ColorBlendToken.Overlay_Thin_Light
@@ -296,7 +307,7 @@ private fun AboutContent(
             ) {
                 Image(
                     modifier = Modifier
-                        .requiredSize(245.dp)
+                        .fillMaxSize()
                         .then(
                             if (enableBlur) {
                                 Modifier.textureBlur(
@@ -435,6 +446,45 @@ private fun AboutContent(
                             )
                         }
                     }
+
+                    Spacer(Modifier.height(12.dp))
+
+                    // ── 致谢（可展开）──
+                    Card(
+                        modifier = Modifier
+                            .padding(horizontal = 12.dp)
+                            .clickable { expandedAck = !expandedAck },
+                        colors = CardDefaults.defaultColors(colorScheme.surfaceContainer),
+                    ) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text("来自 MizuSU 的致谢", fontWeight = FontWeight.Bold, color = colorScheme.onBackground)
+                                Text(
+                                    if (expandedAck) "收起 ▲" else "展开 ▼",
+                                    color = colorScheme.onBackground.copy(alpha = 0.5f)
+                                )
+                            }
+                            AnimatedVisibility(
+                                visible = expandedAck,
+                                enter = expandVertically(spring(stiffness = Spring.StiffnessLow)) + fadeIn(),
+                                exit = shrinkVertically(spring(stiffness = Spring.StiffnessLow)) + fadeOut()
+                            ) {
+                                Column {
+                                    Spacer(Modifier.height(8.dp))
+                                    Text(
+                                        state.acknowledgments,
+                                        color = colorScheme.onBackground.copy(alpha = 0.7f),
+                                        lineHeight = 20.sp
+                                    )
+                                }
+                            }
+                        }
+                    }
+
                     Spacer(
                         Modifier.height(
                             WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() +

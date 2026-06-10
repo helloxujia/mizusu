@@ -6,6 +6,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
@@ -155,43 +160,49 @@ fun CropDialog(
                 drawLine(gridColor, Offset(cropLeft, cropTop + thirdH * 2), Offset(cropRight, cropTop + thirdH * 2), gridStroke.width)
             }
 
-            // 提示文字
+            // 顶部提示
             Text(
-                "拖动/缩放调整裁剪区域",
-                color = Color.White.copy(alpha = 0.7f),
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(top = 48.dp)
+                "拖动或双指缩放调整裁剪区域",
+                color = Color.White.copy(alpha = 0.85f),
+                modifier = Modifier.align(Alignment.TopCenter).padding(top = 48.dp)
             )
 
-            // 按钮
+            // 底部按钮栏
             Row(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = 56.dp)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp, vertical = 24.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                TextButton(onClick = onDismiss) {
-                    Text("取消", color = Color.White)
+                OutlinedButton(
+                    onClick = onDismiss,
+                    modifier = Modifier.weight(1f).height(48.dp),
+                    shape = RoundedCornerShape(24.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
+                    border = ButtonDefaults.outlinedButtonBorder
+                ) {
+                    Text("取消")
                 }
-                TextButton(onClick = {
-                    try {
-                        val imgLeft = (cropLeft - offsetX) / scale
-                        val imgTop = (cropTop - offsetY) / scale
-                        val imgSize = cropSizePx / scale
-
-                        val cx = imgLeft.roundToInt().coerceIn(0, (bitmap.width - 1).coerceAtLeast(0))
-                        val cy = imgTop.roundToInt().coerceIn(0, (bitmap.height - 1).coerceAtLeast(0))
-                        val side = imgSize.roundToInt().coerceIn(1, minOf(bitmap.width - cx, bitmap.height - cy).coerceAtLeast(1))
-
-                        val square = Bitmap.createBitmap(bitmap, cx, cy, side, side)
-                        val cropped = Bitmap.createScaledBitmap(square, 432, 432, true)
-                        if (cropped !== square) square.recycle()
-                        onConfirm(cropped)
-                    } catch (_: Throwable) { onDismiss() }
-                }) {
-                    Text("确认", color = Color.White)
+                Button(
+                    onClick = {
+                        try {
+                            val imgLeft = (cropLeft - offsetX) / scale
+                            val imgTop = (cropTop - offsetY) / scale
+                            val imgSize = cropSizePx / scale
+                            val cx = imgLeft.roundToInt().coerceIn(0, (bitmap.width - 1).coerceAtLeast(0))
+                            val cy = imgTop.roundToInt().coerceIn(0, (bitmap.height - 1).coerceAtLeast(0))
+                            val side = imgSize.roundToInt().coerceIn(1, minOf(bitmap.width - cx, bitmap.height - cy).coerceAtLeast(1))
+                            val square = Bitmap.createBitmap(bitmap, cx, cy, side, side)
+                            val cropped = Bitmap.createScaledBitmap(square, 432, 432, true)
+                            if (cropped !== square) square.recycle()
+                            onConfirm(cropped)
+                        } catch (_: Throwable) { onDismiss() }
+                    },
+                    modifier = Modifier.weight(1f).height(48.dp),
+                    shape = RoundedCornerShape(24.dp)
+                ) {
+                    Text("确认")
                 }
             }
         }
