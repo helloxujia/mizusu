@@ -1,18 +1,42 @@
 package com.zayu.mizu.ui
 
 import android.app.AlertDialog
+import android.content.ContentValues
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
+import android.graphics.Rect
 import android.media.MediaPlayer
+import android.net.Uri
+import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
+import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.Toast
+import com.zayu.mizu.ui.util.module.Shortcut
 import com.zayu.mizu.ui.util.setLauncherIconStyle
 import kotlin.random.Random
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
+import androidx.core.content.pm.ShortcutInfoCompat
+import androidx.core.content.pm.ShortcutManagerCompat
+import androidx.core.graphics.drawable.IconCompat
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.LocalActivity
@@ -76,6 +100,7 @@ import com.zayu.mizu.ui.navigation3.rememberNavigator
 import com.zayu.mizu.ui.screen.about.AboutScreen
 import com.zayu.mizu.ui.screen.appprofile.AppProfileScreen
 import com.zayu.mizu.ui.screen.colorpalette.ColorPaletteScreen
+import com.zayu.mizu.ui.screen.customicon.CropDialog
 import com.zayu.mizu.ui.screen.customicon.CustomIconScreen
 import com.zayu.mizu.ui.screen.executemoduleaction.ExecuteModuleActionScreen
 import com.zayu.mizu.ui.screen.flash.FlashScreen
@@ -236,6 +261,85 @@ class MainActivity : ComponentActivity() {
                                     val activity = this@MainActivity
                                     val prefs = activity.getSharedPreferences("settings", Context.MODE_PRIVATE)
                                     var style by remember { mutableIntStateOf(prefs.getInt("icon_style", 0)) }
+                                    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+                                    var showNameDialog by remember { mutableStateOf(false) }
+
+                                    var sourceBitmap by remember { mutableStateOf<Bitmap?>(null) }
+                                    var showCrop by remember { mutableStateOf(false) }
+
+                                    val imagePicker = rememberLauncherForActivityResult(contract = PickVisualMedia()) { uri ->
+                                        if (uri != null) {
+                                            val bmp = try {
+                                                val opts = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+                                                activity.contentResolver.openInputStream(uri)?.use {
+                                                    BitmapFactory.decodeStream(it, null, opts)
+                                                }
+                                                // 限制最大边 2048，防 OOM
+                                                val maxDim = maxOf(opts.outWidth, opts.outHeight)
+                                                opts.inSampleSize = if (maxDim > 2048) maxDim / 2048 else 1
+                                                opts.inJustDecodeBounds = false
+                                                activity.contentResolver.openInputStream(uri)?.use {
+                                                    BitmapFactory.decodeStream(it, null, opts)
+                                                }
+                                            } catch (_: Throwable) { null }
+                                            if (bmp != null) {
+                                                sourceBitmap = bmp
+                                                showCrop = true
+                                            } else {
+                                                Toast.makeText(activity, "无法加载图片", Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                    }
+
+                                    if (showCrop && sourceBitmap != null) {
+                                        CropDialog(
+                                            bitmap = sourceBitmap!!,
+                                            onConfirm = { cropped ->
+                                                showCrop = false
+                                                selectedImageUri = activity.bitmapToUri(cropped)
+                                                showNameDialog = true
+                                            },
+                                            onDismiss = { showCrop = false; sourceBitmap = null }
+                                        )
+                                    }
+
+                                    if (showNameDialog && selectedImageUri != null) {
+                                        val uri = selectedImageUri!!
+                                        var nameInput by remember { mutableStateOf("MizuSU") }
+                                        AlertDialog.Builder(activity)
+                                            .setTitle("自定义快捷方式名称")
+                                            .setView(FrameLayout(activity).also { container ->
+                                                val editText = EditText(activity).apply {
+                                                    setText(nameInput)
+                                                    selectAll()
+                                                    val padding = (16 * resources.displayMetrics.density).toInt()
+                                                    setPadding(padding, padding, padding, padding)
+                                                }
+                                                container.addView(editText)
+                                                editText.addTextChangedListener(object : android.text.TextWatcher {
+                                                    override fun afterTextChanged(s: android.text.Editable?) {
+                                                        nameInput = s?.toString() ?: ""
+                                                    }
+                                                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                                                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                                                })
+                                            })
+                                            .setPositiveButton("创建") { _, _ ->
+                                                showNameDialog = false
+                                                selectedImageUri = null
+                                                activity.createCustomShortcut(uri, nameInput)
+                                            }
+                                            .setNegativeButton("取消") { _, _ ->
+                                                showNameDialog = false
+                                                selectedImageUri = null
+                                            }
+                                            .setOnDismissListener {
+                                                showNameDialog = false
+                                                selectedImageUri = null
+                                            }
+                                            .show()
+                                    }
+
                                     CustomIconScreen(
                                         iconStyle = style,
                                         onSelect = { s ->
@@ -244,7 +348,14 @@ class MainActivity : ComponentActivity() {
                                             setLauncherIconStyle(activity, s)
                                             Toast.makeText(activity, "图标已切换，返回桌面即可查看新图标", Toast.LENGTH_SHORT).show()
                                         },
-                                        onBack = { navigator.pop() }
+                                        onBack = { navigator.pop() },
+                                        onCustomUpload = {
+                                            if (Shortcut.ensureShortcutPermission(activity)) {
+                                                imagePicker.launch(
+                                                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                                )
+                                            }
+                                        }
                                     )
                                 }
                                 entry<Route.AppProfileTemplate> { AppProfileTemplateScreen() }
@@ -285,6 +396,49 @@ class MainActivity : ComponentActivity() {
         intentStateFlow.value = intentStateValue
     }
 
+    private fun createCustomShortcut(uri: Uri, name: String) {
+        try {
+            val bitmap = Shortcut.loadShortcutBitmap(this, uri.toString())
+            if (bitmap == null) {
+                Toast.makeText(this, "无法加载图片", Toast.LENGTH_SHORT).show()
+                return
+            }
+
+            val iconBmp = if (bitmap.width != 432 || bitmap.height != 432) {
+                Bitmap.createScaledBitmap(bitmap, 432, 432, true)
+            } else bitmap
+
+            val icon = IconCompat.createWithBitmap(iconBmp)
+            val shortcutId = "custom_launcher"
+
+            val intent = Intent(this, MainActivity::class.java).apply {
+                action = Intent.ACTION_VIEW
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            }
+
+            val shortcut = ShortcutInfoCompat.Builder(this, shortcutId)
+                .setShortLabel(name.ifBlank { "MizuSU" })
+                .setIntent(intent)
+                .setIcon(icon)
+                .build()
+
+            if (!ShortcutManagerCompat.isRequestPinShortcutSupported(this)) {
+                Toast.makeText(this, "当前启动器不支持快捷方式", Toast.LENGTH_LONG).show()
+                return
+            }
+
+            val pinned = ShortcutManagerCompat.requestPinShortcut(this, shortcut, null)
+            if (pinned) {
+                Toast.makeText(this, "快捷方式创建成功！", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "快捷方式创建失败，请在弹窗中确认添加", Toast.LENGTH_LONG).show()
+            }
+        } catch (t: Throwable) {
+            Log.w("CustomShortcut", "createCustomShortcut failed", t)
+            Toast.makeText(this, "快捷方式创建失败: ${t.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt(KEY_INTENT_STATE, intentStateValue)
@@ -295,6 +449,38 @@ class MainActivity : ComponentActivity() {
         soundPlayer?.release()
         soundPlayer = null
     }
+
+    private fun bitmapToUri(bmp: Bitmap): Uri {
+        val values = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, "shortcut_icon_${System.currentTimeMillis()}.png")
+            put(MediaStore.Images.Media.MIME_TYPE, "image/png")
+            put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/MizuSU")
+        }
+        val uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+            ?: throw Exception("Failed to create MediaStore entry")
+        contentResolver.openOutputStream(uri)?.use { bmp.compress(Bitmap.CompressFormat.PNG, 100, it) }
+        return uri
+    }
+}
+
+private fun cropToCircleBitmap(source: Bitmap, size: Int = 432): Bitmap {
+    val side = minOf(source.width, source.height)
+    val x = (source.width - side) / 2
+    val y = (source.height - side) / 2
+    val square = Bitmap.createBitmap(source, x, y, side, side)
+
+    val output = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(output)
+    val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val r = size / 2f
+
+    canvas.drawCircle(r, r, r, paint)
+    paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+    canvas.drawBitmap(square, Rect(0, 0, side, side), Rect(0, 0, size, size), paint)
+    paint.xfermode = null
+
+    if (square !== source) square.recycle()
+    return output
 }
 
 val LocalMainPagerState = staticCompositionLocalOf<MainPagerState> { error("LocalMainPagerState not provided") }

@@ -115,7 +115,7 @@ object Shortcut {
         Log.d(TAG, "$logPrefix: initial permission state=$initialState")
         if ((isMiui() || isHyperOS()) && initialState != ShortcutPermissionState.Granted) {
             Log.d(TAG, "$logPrefix: device is Xiaomi, trying to grant via root shell")
-            val rootSuccess = tryGrantMiuiShortcutPermissionByRoot(context)
+            val rootSuccess = tryGrantShortcutPermissionByRoot(context)
             Log.d(TAG, "$logPrefix: root grant attempt success=$rootSuccess")
             val afterState = getShortcutPermissionState(context)
             Log.d(TAG, "$logPrefix: state after root attempt=$afterState")
@@ -352,18 +352,36 @@ object Shortcut {
         return ShortcutPermissionState.Unknown
     }
 
-    private fun tryGrantMiuiShortcutPermissionByRoot(context: Context): Boolean {
+    private fun tryGrantShortcutPermissionByRoot(context: Context): Boolean {
         val pkg = context.applicationContext.packageName
-        val cmd = "appops set $pkg 10017 allow"
-        return try {
+        var anySuccess = false
+        try {
             val shell = getRootShell()
-            val result = shell.newJob().add(cmd).exec()
-            Log.d(TAG, "tryGrantMiuiShortcutPermissionByRoot: cmd=$cmd, code=${result.code}, isSuccess=${result.isSuccess}")
-            result.isSuccess
+            if (!shell.isRoot) {
+                Log.w(TAG, "tryGrantShortcutPermissionByRoot: no root available")
+                return false
+            }
+
+            // MIUI/HyperOS: op 10017
+            if (isMiui() || isHyperOS()) {
+                val cmd = "appops set $pkg 10017 allow"
+                val result = shell.newJob().add(cmd).exec()
+                if (result.isSuccess) anySuccess = true
+                Log.d(TAG, "tryGrantShortcutPermissionByRoot: [MIUI 10017] success=${result.isSuccess}")
+            }
+
+            // ColorOS 旧版: 尝试 content provider 写入
+            if (isColorOS()) {
+                val colorOsCmd = "content update --uri 'content://settings/secure/launcher_shortcut_permission_settings' --bind value:s:'$pkg, 1'"
+                val colorOsResult = shell.newJob().add(colorOsCmd).exec()
+                if (colorOsResult.isSuccess) anySuccess = true
+                Log.d(TAG, "tryGrantShortcutPermissionByRoot: [ColorOS provider] success=${colorOsResult.isSuccess}")
+            }
+            // ColorOS 15+/OxygenOS 16+: 无需预授权，系统弹窗直接处理
         } catch (t: Throwable) {
-            Log.w(TAG, "tryGrantMiuiShortcutPermissionByRoot: exception=${t.message}", t)
-            false
+            Log.w(TAG, "tryGrantShortcutPermissionByRoot: exception=${t.message}", t)
         }
+        return anySuccess
     }
 
     private fun getShortcutPermissionState(context: Context): ShortcutPermissionState {
@@ -387,6 +405,20 @@ object Shortcut {
             Log.d(TAG, "showShortcutPermissionHint: state is not Granted, opening app details settings")
             openAppDetailsSettings(context)
         }
+    }
+
+    fun ensureShortcutPermission(context: Context): Boolean {
+        if (!ShortcutManagerCompat.isRequestPinShortcutSupported(context)) {
+            Log.w(TAG, "ensureShortcutPermission: pin shortcut not supported")
+            Toast.makeText(context, context.getString(R.string.module_shortcut_not_supported), Toast.LENGTH_LONG).show()
+            return false
+        }
+
+        // 使用 root 静默自授权（覆盖 MIUI/HyperOS/Oppo/Vivo 等厂商）
+        tryGrantShortcutPermissionByRoot(context)
+        // requestPinShortcut() 本身会触发系统授权弹窗
+
+        return true
     }
 
     private fun openAppDetailsSettings(context: Context) {

@@ -33,7 +33,8 @@ import com.zayu.mizu.R
 fun CustomIconMaterial(
     iconStyle: Int,
     onSelect: (Int) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onCustomUpload: () -> Unit = {},
 ) {
     val icons = listOf(
         IconPreset("默认", R.drawable.ic_launcher_foreground),
@@ -123,7 +124,9 @@ fun CustomIconMaterial(
             item {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(4.dp)
+                    modifier = Modifier
+                        .clickable { onCustomUpload() }
+                        .padding(4.dp)
                 ) {
                     Box(
                         modifier = Modifier

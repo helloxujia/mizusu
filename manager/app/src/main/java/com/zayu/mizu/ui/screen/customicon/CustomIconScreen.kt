@@ -8,10 +8,11 @@ import com.zayu.mizu.ui.UiMode
 fun CustomIconScreen(
     iconStyle: Int,
     onSelect: (Int) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onCustomUpload: () -> Unit = {},
 ) {
     when (LocalUiMode.current) {
-        UiMode.Miuix -> CustomIconMiuix(iconStyle, onSelect, onBack)
-        UiMode.Material -> CustomIconMaterial(iconStyle, onSelect, onBack)
+        UiMode.Miuix -> CustomIconMiuix(iconStyle, onSelect, onBack, onCustomUpload)
+        UiMode.Material -> CustomIconMaterial(iconStyle, onSelect, onBack, onCustomUpload)
     }
 }

@@ -51,7 +51,8 @@ import androidx.compose.ui.draw.drawBehind
 fun CustomIconMiuix(
     iconStyle: Int,
     onSelect: (Int) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onCustomUpload: () -> Unit = {},
 ) {
     val scrollBehavior = MiuixScrollBehavior()
     val enableBlur = LocalEnableBlur.current
@@ -219,6 +220,7 @@ fun CustomIconMiuix(
                 Card(
                     modifier = Modifier
                         .clip(RoundedCornerShape(16.dp))
+                        .clickable { onCustomUpload() }
                         .then(
                             if (enableGlass)
                                 Modifier.border(0.5.dp, colorScheme.onBackground.copy(alpha = 0.15f), RoundedCornerShape(16.dp))

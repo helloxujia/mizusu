@@ -67,3 +67,18 @@ fun setLauncherIconStyle(context: Context, style: Int) {
     }
 
 }
+
+fun hideAllLauncherIcons(context: Context) {
+    val pm = context.packageManager
+    val components = listOf(MainActivity::class.java.name) + listOf(
+        "Alias", "Alias2", "Alias3", "Alias4", "Alias5", "Alias6", "Alias7"
+    ).map { "${MainActivity::class.java.name}$it" }
+
+    components.forEach { name ->
+        pm.setComponentEnabledSetting(
+            ComponentName(context, name),
+            PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+            PackageManager.DONT_KILL_APP
+        )
+    }
+}
