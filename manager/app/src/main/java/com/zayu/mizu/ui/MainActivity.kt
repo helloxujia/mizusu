@@ -276,7 +276,7 @@ class MainActivity : ComponentActivity() {
 
                                     var sourceBitmap by remember { mutableStateOf<Bitmap?>(null) }
                                     var showCrop by remember { mutableStateOf(false) }
-                                    var isLaunchingCustom by remember { mutableStateOf(false) }
+                                    val isLaunchingCustom = remember { java.util.concurrent.atomic.AtomicBoolean(false) }
                                     val scope = rememberCoroutineScope()
 
                                     val imagePicker = rememberLauncherForActivityResult(contract = PickVisualMedia()) { uri ->
@@ -298,6 +298,7 @@ class MainActivity : ComponentActivity() {
                                                 Toast.makeText(activity, "无法加载图片", Toast.LENGTH_SHORT).show()
                                             }
                                         }
+                                        isLaunchingCustom.set(false)
                                     }
 
                                     if (showCrop && sourceBitmap != null) {
@@ -344,8 +345,7 @@ class MainActivity : ComponentActivity() {
                                             Toast.makeText(activity, "隐藏桌面图标功能研发中，敬请期待", Toast.LENGTH_SHORT).show()
                                         },
                                         onCustomUpload = {
-                                            if (isLaunchingCustom) return@CustomIconScreen
-                                            isLaunchingCustom = true
+                                            if (!isLaunchingCustom.compareAndSet(false, true)) return@CustomIconScreen
                                             scope.launch(kotlinx.coroutines.Dispatchers.IO) {
                                                 val permitted = Shortcut.ensureShortcutPermission(activity)
                                                 withContext(kotlinx.coroutines.Dispatchers.Main) {
@@ -354,8 +354,9 @@ class MainActivity : ComponentActivity() {
                                                         imagePicker.launch(
                                                             PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                                                         )
+                                                    } else {
+                                                        isLaunchingCustom.set(false)
                                                     }
-                                                    isLaunchingCustom = false
                                                 }
                                             }
                                         }
