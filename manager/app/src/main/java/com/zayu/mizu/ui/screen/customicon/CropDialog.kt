@@ -81,13 +81,23 @@ fun CropDialog(
                 .background(Color.Black)
                 .pointerInput(Unit) {
                     detectTransformGestures { _, pan, zoom, _ ->
-                        val newScale = (currentScale * zoom).coerceIn(baseScale * 0.5f, baseScale * 3f)
-                        var newX = currentOffsetX + pan.x
-                        var newY = currentOffsetY + pan.y
+                        val oldScale = currentScale
+                        val newScale = (oldScale * zoom).coerceIn(baseScale * 0.5f, baseScale * 3f)
+
+                        // 裁剪框中心（屏幕坐标）
+                        val cropCenterX = (cropLeft + cropRight) / 2f
+                        val cropCenterY = (cropTop + cropBottom) / 2f
+
+                        // 裁剪框中心对应的图像像素坐标（缩放前）
+                        val focusImgX = (cropCenterX - currentOffsetX) / oldScale
+                        val focusImgY = (cropCenterY - currentOffsetY) / oldScale
+
+                        // 缩放后，让焦点仍位于裁剪框中心
+                        var newX = cropCenterX - focusImgX * newScale + pan.x
+                        var newY = cropCenterY - focusImgY * newScale + pan.y
 
                         val imgWDisplay = imgW * newScale
                         val imgHDisplay = imgH * newScale
-                        // 图片比裁剪框大：约束边界覆盖裁剪框；图片比裁剪框小：居中
                         if (imgWDisplay > cropSizePx) {
                             newX = newX.coerceIn(cropRight - imgWDisplay, cropLeft)
                         } else {

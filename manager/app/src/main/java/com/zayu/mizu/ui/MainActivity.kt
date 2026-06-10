@@ -24,7 +24,13 @@ import kotlin.random.Random
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.resume
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration
@@ -266,6 +272,8 @@ class MainActivity : ComponentActivity() {
 
                                     var sourceBitmap by remember { mutableStateOf<Bitmap?>(null) }
                                     var showCrop by remember { mutableStateOf(false) }
+                                    var isLaunchingCustom by remember { mutableStateOf(false) }
+                                    val scope = rememberCoroutineScope()
 
                                     val imagePicker = rememberLauncherForActivityResult(contract = PickVisualMedia()) { uri ->
                                         if (uri != null) {
@@ -303,41 +311,35 @@ class MainActivity : ComponentActivity() {
                                         )
                                     }
 
-                                    if (showNameDialog && selectedImageUri != null) {
+                                    LaunchedEffect(showNameDialog) {
+                                        if (!showNameDialog || selectedImageUri == null) return@LaunchedEffect
                                         val uri = selectedImageUri!!
-                                        var nameInput by remember { mutableStateOf("MizuSU") }
-                                        AlertDialog.Builder(activity)
-                                            .setTitle("自定义快捷方式名称")
-                                            .setView(FrameLayout(activity).also { container ->
-                                                val editText = EditText(activity).apply {
-                                                    setText(nameInput)
-                                                    selectAll()
-                                                    val padding = (16 * resources.displayMetrics.density).toInt()
-                                                    setPadding(padding, padding, padding, padding)
-                                                }
-                                                container.addView(editText)
-                                                editText.addTextChangedListener(object : android.text.TextWatcher {
-                                                    override fun afterTextChanged(s: android.text.Editable?) {
-                                                        nameInput = s?.toString() ?: ""
-                                                    }
+                                        val nameHolder = android.util.ArrayMap<String, String>().also { it["name"] = "MizuSU" }
+                                        kotlinx.coroutines.suspendCancellableCoroutine { cont ->
+                                            val editText = EditText(activity).apply {
+                                                setText("MizuSU")
+                                                selectAll()
+                                                val p = (16 * resources.displayMetrics.density).toInt()
+                                                setPadding(p, p, p, p)
+                                                addTextChangedListener(object : android.text.TextWatcher {
+                                                    override fun afterTextChanged(s: android.text.Editable?) { nameHolder["name"] = s?.toString() ?: "" }
                                                     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
                                                     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
                                                 })
-                                            })
-                                            .setPositiveButton("创建") { _, _ ->
-                                                showNameDialog = false
-                                                selectedImageUri = null
-                                                activity.createCustomShortcut(uri, nameInput)
                                             }
-                                            .setNegativeButton("取消") { _, _ ->
-                                                showNameDialog = false
-                                                selectedImageUri = null
-                                            }
-                                            .setOnDismissListener {
-                                                showNameDialog = false
-                                                selectedImageUri = null
-                                            }
-                                            .show()
+                                            val dialog = AlertDialog.Builder(activity)
+                                                .setTitle("自定义快捷方式名称")
+                                                .setView(FrameLayout(activity).also { it.addView(editText) })
+                                                .setPositiveButton("创建") { _, _ -> cont.resume(nameHolder["name"] ?: "MizuSU") }
+                                                .setNegativeButton("取消") { _, _ -> cont.resume(null) }
+                                                .setOnDismissListener { cont.resume(null) }
+                                                .show()
+                                            cont.invokeOnCancellation { dialog.dismiss() }
+                                        }?.let { name ->
+                                            activity.createCustomShortcut(uri, name)
+                                        }
+                                        showNameDialog = false
+                                        selectedImageUri = null
                                     }
 
                                     CustomIconScreen(
@@ -350,10 +352,19 @@ class MainActivity : ComponentActivity() {
                                         },
                                         onBack = { navigator.pop() },
                                         onCustomUpload = {
-                                            if (Shortcut.ensureShortcutPermission(activity)) {
-                                                imagePicker.launch(
-                                                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                                                )
+                                            if (isLaunchingCustom) return@CustomIconScreen
+                                            isLaunchingCustom = true
+                                            scope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                                                val permitted = Shortcut.ensureShortcutPermission(activity)
+                                                withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                                    if (permitted) {
+                                                        Toast.makeText(activity, "请选择一张正方形图片，以获得最佳桌面图标效果", Toast.LENGTH_LONG).show()
+                                                        imagePicker.launch(
+                                                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                                        )
+                                                    }
+                                                    isLaunchingCustom = false
+                                                }
                                             }
                                         }
                                     )
