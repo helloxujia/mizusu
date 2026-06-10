@@ -267,7 +267,7 @@ class MainActivity : ComponentActivity() {
                                     val activity = this@MainActivity
                                     val prefs = activity.getSharedPreferences("settings", Context.MODE_PRIVATE)
                                     var style by remember { mutableIntStateOf(prefs.getInt("icon_style", 0)) }
-                                    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+                                    var pendingCroppedBitmap by remember { mutableStateOf<Bitmap?>(null) }
                                     var showNameDialog by remember { mutableStateOf(false) }
 
                                     var sourceBitmap by remember { mutableStateOf<Bitmap?>(null) }
@@ -278,17 +278,14 @@ class MainActivity : ComponentActivity() {
                                     val imagePicker = rememberLauncherForActivityResult(contract = PickVisualMedia()) { uri ->
                                         if (uri != null) {
                                             val bmp = try {
+                                                val bytes = activity.contentResolver.openInputStream(uri)?.use { it.readBytes() }
+                                                    ?: throw Exception("Failed to read image")
                                                 val opts = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-                                                activity.contentResolver.openInputStream(uri)?.use {
-                                                    BitmapFactory.decodeStream(it, null, opts)
-                                                }
-                                                // 限制最大边 2048，防 OOM
+                                                BitmapFactory.decodeByteArray(bytes, 0, bytes.size, opts)
                                                 val maxDim = maxOf(opts.outWidth, opts.outHeight)
                                                 opts.inSampleSize = if (maxDim > 2048) maxDim / 2048 else 1
                                                 opts.inJustDecodeBounds = false
-                                                activity.contentResolver.openInputStream(uri)?.use {
-                                                    BitmapFactory.decodeStream(it, null, opts)
-                                                }
+                                                BitmapFactory.decodeByteArray(bytes, 0, bytes.size, opts)
                                             } catch (_: Throwable) { null }
                                             if (bmp != null) {
                                                 sourceBitmap = bmp
@@ -304,7 +301,7 @@ class MainActivity : ComponentActivity() {
                                             bitmap = sourceBitmap!!,
                                             onConfirm = { cropped ->
                                                 showCrop = false
-                                                selectedImageUri = activity.bitmapToUri(cropped)
+                                                pendingCroppedBitmap = cropped
                                                 showNameDialog = true
                                             },
                                             onDismiss = { showCrop = false; sourceBitmap = null }
@@ -312,8 +309,8 @@ class MainActivity : ComponentActivity() {
                                     }
 
                                     LaunchedEffect(showNameDialog) {
-                                        if (!showNameDialog || selectedImageUri == null) return@LaunchedEffect
-                                        val uri = selectedImageUri!!
+                                        if (!showNameDialog || pendingCroppedBitmap == null) return@LaunchedEffect
+                                        val bmp = pendingCroppedBitmap!!
                                         val nameHolder = android.util.ArrayMap<String, String>().also { it["name"] = "MizuSU" }
                                         kotlinx.coroutines.suspendCancellableCoroutine { cont ->
                                             val editText = EditText(activity).apply {
@@ -336,10 +333,10 @@ class MainActivity : ComponentActivity() {
                                                 .show()
                                             cont.invokeOnCancellation { dialog.dismiss() }
                                         }?.let { name ->
-                                            activity.createCustomShortcut(uri, name)
+                                            activity.createCustomShortcut(bmp, name)
                                         }
                                         showNameDialog = false
-                                        selectedImageUri = null
+                                        pendingCroppedBitmap = null
                                     }
 
                                     CustomIconScreen(
@@ -407,14 +404,8 @@ class MainActivity : ComponentActivity() {
         intentStateFlow.value = intentStateValue
     }
 
-    private fun createCustomShortcut(uri: Uri, name: String) {
+    private fun createCustomShortcut(bitmap: Bitmap, name: String) {
         try {
-            val bitmap = Shortcut.loadShortcutBitmap(this, uri.toString())
-            if (bitmap == null) {
-                Toast.makeText(this, "无法加载图片", Toast.LENGTH_SHORT).show()
-                return
-            }
-
             val iconBmp = if (bitmap.width != 432 || bitmap.height != 432) {
                 Bitmap.createScaledBitmap(bitmap, 432, 432, true)
             } else bitmap
@@ -433,16 +424,28 @@ class MainActivity : ComponentActivity() {
                 .setIcon(icon)
                 .build()
 
-            if (!ShortcutManagerCompat.isRequestPinShortcutSupported(this)) {
-                Toast.makeText(this, "当前启动器不支持快捷方式", Toast.LENGTH_LONG).show()
-                return
-            }
+            // 先推送到动态快捷方式（已有 pinned 的会自动刷新图标和名称）
+            ShortcutManagerCompat.pushDynamicShortcut(this, shortcut)
 
-            val pinned = ShortcutManagerCompat.requestPinShortcut(this, shortcut, null)
-            if (pinned) {
-                Toast.makeText(this, "快捷方式创建成功！", Toast.LENGTH_SHORT).show()
+            // 检查是否已固定到桌面
+            val alreadyPinned = try {
+                ShortcutManagerCompat.getShortcuts(this, ShortcutManagerCompat.FLAG_MATCH_PINNED)
+                    .any { it.id == shortcutId && it.isEnabled }
+            } catch (_: Throwable) { false }
+
+            if (alreadyPinned) {
+                Toast.makeText(this, "桌面图标已更新！", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this, "快捷方式创建失败，请在弹窗中确认添加", Toast.LENGTH_LONG).show()
+                if (!ShortcutManagerCompat.isRequestPinShortcutSupported(this)) {
+                    Toast.makeText(this, "当前启动器不支持快捷方式", Toast.LENGTH_LONG).show()
+                    return
+                }
+                val pinned = ShortcutManagerCompat.requestPinShortcut(this, shortcut, null)
+                if (pinned) {
+                    Toast.makeText(this, "快捷方式已创建！", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "请在弹出的系统对话框中确认添加", Toast.LENGTH_LONG).show()
+                }
             }
         } catch (t: Throwable) {
             Log.w("CustomShortcut", "createCustomShortcut failed", t)
