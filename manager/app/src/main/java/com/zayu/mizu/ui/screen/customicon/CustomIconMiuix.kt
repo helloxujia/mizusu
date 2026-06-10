@@ -53,6 +53,7 @@ fun CustomIconMiuix(
     onSelect: (Int) -> Unit,
     onBack: () -> Unit,
     onCustomUpload: () -> Unit = {},
+    onRestore: () -> Unit = {},
 ) {
     val scrollBehavior = MiuixScrollBehavior()
     val enableBlur = LocalEnableBlur.current
@@ -266,6 +267,26 @@ fun CustomIconMiuix(
                             textAlign = TextAlign.Center,
                             color = colorScheme.onBackground.copy(alpha = 0.4f)
                         )
+                    }
+                }
+            }
+
+            // ── 还原桌面图标 ──
+            item(span = { GridItemSpan(4) }) {
+                Card(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(16.dp))
+                        .clickable { onRestore() },
+                    colors = CardDefaults.defaultColors(colorScheme.surfaceContainer)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text("还原桌面图标", color = colorScheme.onBackground)
+                            Text("恢复为当前选中的预设图标", color = colorScheme.onBackground.copy(alpha = 0.5f))
+                        }
                     }
                 }
             }

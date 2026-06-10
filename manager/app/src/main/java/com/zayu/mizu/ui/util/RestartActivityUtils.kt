@@ -27,9 +27,9 @@ fun toggleLauncherIcon(context: Context, useAlt: Boolean) {
 fun setLauncherIconStyle(context: Context, style: Int) {
     val pm = context.packageManager
     val aliases = listOf(
-        null,  // 0 = default (MainActivity itself)
-        "${MainActivity::class.java.name}Alias",
-        "${MainActivity::class.java.name}Alias2",
+        "${MainActivity::class.java.name}Alias0",   // 0
+        "${MainActivity::class.java.name}Alias",    // 1
+        "${MainActivity::class.java.name}Alias2",   // 2
         "${MainActivity::class.java.name}Alias3",
         "${MainActivity::class.java.name}Alias4",
         "${MainActivity::class.java.name}Alias5",
@@ -37,12 +37,7 @@ fun setLauncherIconStyle(context: Context, style: Int) {
         "${MainActivity::class.java.name}Alias7"
     )
 
-    // Disable all
-    pm.setComponentEnabledSetting(
-        ComponentName(context, MainActivity::class.java.name),
-        PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-        PackageManager.DONT_KILL_APP
-    )
+    // 只禁用别名（MainActivity 本体始终启用，供自定义快捷方式使用）
     for (aliasName in aliases.filterNotNull()) {
         pm.setComponentEnabledSetting(
             ComponentName(context, aliasName),
@@ -51,16 +46,10 @@ fun setLauncherIconStyle(context: Context, style: Int) {
         )
     }
 
-    // Enable selected
-    if (style == 0) {
+    // Enable selected alias
+    if (style in aliases.indices) {
         pm.setComponentEnabledSetting(
-            ComponentName(context, MainActivity::class.java.name),
-            PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-            PackageManager.DONT_KILL_APP
-        )
-    } else {
-        pm.setComponentEnabledSetting(
-            ComponentName(context, aliases[style] ?: return),
+            ComponentName(context, aliases[style]),
             PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
             PackageManager.DONT_KILL_APP
         )
@@ -70,8 +59,9 @@ fun setLauncherIconStyle(context: Context, style: Int) {
 
 fun hideAllLauncherIcons(context: Context) {
     val pm = context.packageManager
-    val components = listOf(MainActivity::class.java.name) + listOf(
-        "Alias", "Alias2", "Alias3", "Alias4", "Alias5", "Alias6", "Alias7"
+    // 只禁用桌面入口别名（MainActivity 本体无 LAUNCHER 且需保持启用供快捷方式使用）
+    val components = listOf(
+        "Alias0", "Alias", "Alias2", "Alias3", "Alias4", "Alias5", "Alias6", "Alias7"
     ).map { "${MainActivity::class.java.name}$it" }
 
     components.forEach { name ->
@@ -81,4 +71,10 @@ fun hideAllLauncherIcons(context: Context) {
             PackageManager.DONT_KILL_APP
         )
     }
+}
+
+fun restoreLauncherIcon(context: Context) {
+    val prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
+    val style = prefs.getInt("icon_style", 0)
+    setLauncherIconStyle(context, style)
 }

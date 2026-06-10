@@ -186,7 +186,7 @@ fun ShortcutNameDialog(
                     )
                 )
 
-                Spacer(Modifier.height(20.dp))
+                Spacer(Modifier.height(16.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),

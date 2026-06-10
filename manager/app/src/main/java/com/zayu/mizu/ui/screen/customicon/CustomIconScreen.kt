@@ -10,9 +10,10 @@ fun CustomIconScreen(
     onSelect: (Int) -> Unit,
     onBack: () -> Unit,
     onCustomUpload: () -> Unit = {},
+    onRestore: () -> Unit = {},
 ) {
     when (LocalUiMode.current) {
-        UiMode.Miuix -> CustomIconMiuix(iconStyle, onSelect, onBack, onCustomUpload)
-        UiMode.Material -> CustomIconMaterial(iconStyle, onSelect, onBack, onCustomUpload)
+        UiMode.Miuix -> CustomIconMiuix(iconStyle, onSelect, onBack, onCustomUpload, onRestore)
+        UiMode.Material -> CustomIconMaterial(iconStyle, onSelect, onBack, onCustomUpload, onRestore)
     }
 }

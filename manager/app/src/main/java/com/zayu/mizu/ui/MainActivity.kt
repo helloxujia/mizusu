@@ -20,6 +20,8 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.Toast
 import com.zayu.mizu.ui.util.module.Shortcut
+import com.zayu.mizu.ui.util.hideAllLauncherIcons
+import com.zayu.mizu.ui.util.restoreLauncherIcon
 import com.zayu.mizu.ui.util.setLauncherIconStyle
 import kotlin.random.Random
 import androidx.compose.runtime.getValue
@@ -29,9 +31,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
-import kotlin.coroutines.resume
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration
@@ -186,6 +186,8 @@ class MainActivity : ComponentActivity() {
         if (soundEnabled) {
             playRandomSound()
         }
+        // 初始化桌面图标入口（MainActivity 无 LAUNCHER 过滤器，必须启用一个别名）
+        setLauncherIconStyle(this, prefs.getInt("icon_style", 0))
         intentStateValue = savedInstanceState?.getInt(KEY_INTENT_STATE, 0) ?: 0
         intentStateFlow.value = intentStateValue
 
@@ -332,9 +334,21 @@ class MainActivity : ComponentActivity() {
                                             style = s
                                             prefs.edit().putInt("icon_style", s).apply()
                                             setLauncherIconStyle(activity, s)
-                                            Toast.makeText(activity, "图标已切换，返回桌面即可查看新图标", Toast.LENGTH_SHORT).show()
+                                            val hasCustomShortcut = try {
+                                                ShortcutManagerCompat.getShortcuts(activity, ShortcutManagerCompat.FLAG_MATCH_PINNED)
+                                                    .any { it.id == "custom_launcher" && it.isEnabled }
+                                            } catch (_: Throwable) { false }
+                                            if (hasCustomShortcut) {
+                                                Toast.makeText(activity, "图标已切换。检测到桌面有自定义快捷方式，其不会失效，但两个图标并存可能混淆", Toast.LENGTH_LONG).show()
+                                            } else {
+                                                Toast.makeText(activity, "图标已切换，返回桌面即可查看新图标", Toast.LENGTH_SHORT).show()
+                                            }
                                         },
                                         onBack = { navigator.pop() },
+                                        onRestore = {
+                                            restoreLauncherIcon(activity)
+                                            Toast.makeText(activity, "桌面图标已还原", Toast.LENGTH_SHORT).show()
+                                        },
                                         onCustomUpload = {
                                             if (isLaunchingCustom) return@CustomIconScreen
                                             isLaunchingCustom = true
@@ -391,7 +405,8 @@ class MainActivity : ComponentActivity() {
         intentStateFlow.value = intentStateValue
     }
 
-    private fun createCustomShortcut(bitmap: Bitmap, name: String, shape: IconShape) {
+    // 返回 true 表示快捷方式已成功固定到桌面
+    private fun createCustomShortcut(bitmap: Bitmap, name: String, shape: IconShape): Boolean {
         try {
             val square = if (bitmap.width != 432 || bitmap.height != 432) {
                 Bitmap.createScaledBitmap(bitmap, 432, 432, true)
@@ -416,32 +431,36 @@ class MainActivity : ComponentActivity() {
                 .setIcon(icon)
                 .build()
 
-            // 先推送到动态快捷方式（已有 pinned 的会自动刷新图标和名称）
+            // 先推送到动态快捷方式
             ShortcutManagerCompat.pushDynamicShortcut(this, shortcut)
 
-            // 检查是否已固定到桌面
-            val alreadyPinned = try {
-                ShortcutManagerCompat.getShortcuts(this, ShortcutManagerCompat.FLAG_MATCH_PINNED)
-                    .any { it.id == shortcutId && it.isEnabled }
-            } catch (_: Throwable) { false }
+            // 用 SharedPreferences 记录是否已固定（getShortcuts 在某些启动器上不可靠）
+            val prefs = getSharedPreferences("settings", MODE_PRIVATE)
+            val alreadyPinned = prefs.getBoolean("shortcut_pinned", false)
 
             if (alreadyPinned) {
                 Toast.makeText(this, "桌面图标已更新！", Toast.LENGTH_SHORT).show()
+                return true
+            }
+
+            if (!ShortcutManagerCompat.isRequestPinShortcutSupported(this)) {
+                Toast.makeText(this, "当前启动器不支持快捷方式", Toast.LENGTH_LONG).show()
+                return false
+            }
+
+            val pinned = ShortcutManagerCompat.requestPinShortcut(this, shortcut, null)
+            if (pinned) {
+                prefs.edit().putBoolean("shortcut_pinned", true).apply()
+                Toast.makeText(this, "快捷方式已创建！请查看桌面", Toast.LENGTH_SHORT).show()
+                return true
             } else {
-                if (!ShortcutManagerCompat.isRequestPinShortcutSupported(this)) {
-                    Toast.makeText(this, "当前启动器不支持快捷方式", Toast.LENGTH_LONG).show()
-                    return
-                }
-                val pinned = ShortcutManagerCompat.requestPinShortcut(this, shortcut, null)
-                if (pinned) {
-                    Toast.makeText(this, "快捷方式已创建！", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(this, "请在弹出的系统对话框中确认添加", Toast.LENGTH_LONG).show()
-                }
+                Toast.makeText(this, "请在系统弹窗中确认添加到桌面", Toast.LENGTH_LONG).show()
+                return false
             }
         } catch (t: Throwable) {
             Log.w("CustomShortcut", "createCustomShortcut failed", t)
             Toast.makeText(this, "快捷方式创建失败: ${t.message}", Toast.LENGTH_SHORT).show()
+            return false
         }
     }
 
