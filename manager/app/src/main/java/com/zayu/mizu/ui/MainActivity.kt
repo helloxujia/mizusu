@@ -10,6 +10,7 @@ import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.graphics.Rect
+import android.graphics.RectF
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Environment
@@ -108,6 +109,8 @@ import com.zayu.mizu.ui.screen.appprofile.AppProfileScreen
 import com.zayu.mizu.ui.screen.colorpalette.ColorPaletteScreen
 import com.zayu.mizu.ui.screen.customicon.CropDialog
 import com.zayu.mizu.ui.screen.customicon.CustomIconScreen
+import com.zayu.mizu.ui.screen.customicon.IconShape
+import com.zayu.mizu.ui.screen.customicon.ShortcutNameDialog
 import com.zayu.mizu.ui.screen.executemoduleaction.ExecuteModuleActionScreen
 import com.zayu.mizu.ui.screen.flash.FlashScreen
 import com.zayu.mizu.ui.screen.home.HomePager
@@ -308,35 +311,19 @@ class MainActivity : ComponentActivity() {
                                         )
                                     }
 
-                                    LaunchedEffect(showNameDialog) {
-                                        if (!showNameDialog || pendingCroppedBitmap == null) return@LaunchedEffect
-                                        val bmp = pendingCroppedBitmap!!
-                                        val nameHolder = android.util.ArrayMap<String, String>().also { it["name"] = "MizuSU" }
-                                        kotlinx.coroutines.suspendCancellableCoroutine { cont ->
-                                            val editText = EditText(activity).apply {
-                                                setText("MizuSU")
-                                                selectAll()
-                                                val p = (16 * resources.displayMetrics.density).toInt()
-                                                setPadding(p, p, p, p)
-                                                addTextChangedListener(object : android.text.TextWatcher {
-                                                    override fun afterTextChanged(s: android.text.Editable?) { nameHolder["name"] = s?.toString() ?: "" }
-                                                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-                                                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-                                                })
+                                    if (showNameDialog && pendingCroppedBitmap != null) {
+                                        ShortcutNameDialog(
+                                            previewBitmap = pendingCroppedBitmap!!,
+                                            onConfirm = { name, shape ->
+                                                showNameDialog = false
+                                                activity.createCustomShortcut(pendingCroppedBitmap!!, name, shape)
+                                                pendingCroppedBitmap = null
+                                            },
+                                            onDismiss = {
+                                                showNameDialog = false
+                                                pendingCroppedBitmap = null
                                             }
-                                            val dialog = AlertDialog.Builder(activity)
-                                                .setTitle("自定义快捷方式名称")
-                                                .setView(FrameLayout(activity).also { it.addView(editText) })
-                                                .setPositiveButton("创建") { _, _ -> cont.resume(nameHolder["name"] ?: "MizuSU") }
-                                                .setNegativeButton("取消") { _, _ -> cont.resume(null) }
-                                                .setOnDismissListener { cont.resume(null) }
-                                                .show()
-                                            cont.invokeOnCancellation { dialog.dismiss() }
-                                        }?.let { name ->
-                                            activity.createCustomShortcut(bmp, name)
-                                        }
-                                        showNameDialog = false
-                                        pendingCroppedBitmap = null
+                                        )
                                     }
 
                                     CustomIconScreen(
@@ -404,11 +391,16 @@ class MainActivity : ComponentActivity() {
         intentStateFlow.value = intentStateValue
     }
 
-    private fun createCustomShortcut(bitmap: Bitmap, name: String) {
+    private fun createCustomShortcut(bitmap: Bitmap, name: String, shape: IconShape) {
         try {
-            val iconBmp = if (bitmap.width != 432 || bitmap.height != 432) {
+            val square = if (bitmap.width != 432 || bitmap.height != 432) {
                 Bitmap.createScaledBitmap(bitmap, 432, 432, true)
             } else bitmap
+
+            val iconBmp = when (shape) {
+                IconShape.Circle -> cropToCircleBitmap(square, 432)
+                IconShape.RoundedSquare -> createRoundedSquareBitmap(square, 432, 48f)
+            }
 
             val icon = IconCompat.createWithBitmap(iconBmp)
             val shortcutId = "custom_launcher"
@@ -475,6 +467,18 @@ class MainActivity : ComponentActivity() {
         contentResolver.openOutputStream(uri)?.use { bmp.compress(Bitmap.CompressFormat.PNG, 100, it) }
         return uri
     }
+}
+
+private fun createRoundedSquareBitmap(source: Bitmap, size: Int = 432, cornerRadius: Float): Bitmap {
+    val output = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(output)
+    val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val rect = android.graphics.RectF(0f, 0f, size.toFloat(), size.toFloat())
+    canvas.drawRoundRect(rect, cornerRadius, cornerRadius, paint)
+    paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+    canvas.drawBitmap(source, null, android.graphics.Rect(0, 0, size, size), paint)
+    paint.xfermode = null
+    return output
 }
 
 private fun cropToCircleBitmap(source: Bitmap, size: Int = 432): Bitmap {
