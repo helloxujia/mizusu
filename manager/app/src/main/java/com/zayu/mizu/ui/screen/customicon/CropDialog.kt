@@ -144,14 +144,15 @@ fun CropDialog(
                 // 右
                 drawRect(maskColor, Offset(cropRight, cropTop), Size(size.width - cropRight, cropSizePx))
 
-                // 裁剪框边框
-                drawRoundRect(
-                    color = Color.White.copy(alpha = 0.6f),
-                    topLeft = Offset(cropLeft, cropTop),
-                    size = Size(cropSizePx, cropSizePx),
-                    cornerRadius = CornerRadius(cropRadiusPx),
-                    style = Stroke(width = 2.dp.toPx())
-                )
+                // 九宫格辅助线
+                val gridColor = Color.White.copy(alpha = 0.4f)
+                val gridStroke = Stroke(width = 1.dp.toPx())
+                val thirdW = cropSizePx / 3f
+                val thirdH = cropSizePx / 3f
+                drawLine(gridColor, Offset(cropLeft + thirdW, cropTop), Offset(cropLeft + thirdW, cropBottom), gridStroke.width)
+                drawLine(gridColor, Offset(cropLeft + thirdW * 2, cropTop), Offset(cropLeft + thirdW * 2, cropBottom), gridStroke.width)
+                drawLine(gridColor, Offset(cropLeft, cropTop + thirdH), Offset(cropRight, cropTop + thirdH), gridStroke.width)
+                drawLine(gridColor, Offset(cropLeft, cropTop + thirdH * 2), Offset(cropRight, cropTop + thirdH * 2), gridStroke.width)
             }
 
             // 提示文字

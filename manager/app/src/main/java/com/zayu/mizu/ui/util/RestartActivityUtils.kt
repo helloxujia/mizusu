@@ -68,6 +68,12 @@ fun setLauncherIconStyle(context: Context, style: Int) {
 
 }
 
+fun restoreLauncherIcon(context: Context) {
+    val prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
+    val style = prefs.getInt("icon_style", 0)
+    setLauncherIconStyle(context, style)
+}
+
 fun hideAllLauncherIcons(context: Context) {
     val pm = context.packageManager
     val components = listOf(MainActivity::class.java.name) + listOf(

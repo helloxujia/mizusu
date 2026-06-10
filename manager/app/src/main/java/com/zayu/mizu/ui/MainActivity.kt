@@ -20,6 +20,7 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.Toast
 import com.zayu.mizu.ui.util.module.Shortcut
+import com.zayu.mizu.ui.util.restoreLauncherIcon
 import com.zayu.mizu.ui.util.setLauncherIconStyle
 import kotlin.random.Random
 import androidx.compose.runtime.getValue
@@ -335,6 +336,13 @@ class MainActivity : ComponentActivity() {
                                             Toast.makeText(activity, "图标已切换，返回桌面即可查看新图标", Toast.LENGTH_SHORT).show()
                                         },
                                         onBack = { navigator.pop() },
+                                        onRestore = {
+                                            restoreLauncherIcon(activity)
+                                            Toast.makeText(activity, "桌面图标已还原", Toast.LENGTH_SHORT).show()
+                                        },
+                                        onToggleHide = {
+                                            Toast.makeText(activity, "隐藏桌面图标功能研发中，敬请期待", Toast.LENGTH_SHORT).show()
+                                        },
                                         onCustomUpload = {
                                             if (isLaunchingCustom) return@CustomIconScreen
                                             isLaunchingCustom = true

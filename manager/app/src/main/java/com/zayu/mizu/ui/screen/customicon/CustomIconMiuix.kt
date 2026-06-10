@@ -53,6 +53,8 @@ fun CustomIconMiuix(
     onSelect: (Int) -> Unit,
     onBack: () -> Unit,
     onCustomUpload: () -> Unit = {},
+    onRestore: () -> Unit = {},
+    onToggleHide: () -> Unit = {},
 ) {
     val scrollBehavior = MiuixScrollBehavior()
     val enableBlur = LocalEnableBlur.current
@@ -265,6 +267,28 @@ fun CustomIconMiuix(
                             "自定义",
                             textAlign = TextAlign.Center,
                             color = colorScheme.onBackground.copy(alpha = 0.4f)
+                        )
+                    }
+                }
+            }
+
+            // ── 隐藏桌面图标（研发中）──
+            item(span = { GridItemSpan(4) }) {
+                Card(
+                    modifier = Modifier.clip(RoundedCornerShape(16.dp)).clickable { onToggleHide() },
+                    colors = CardDefaults.defaultColors(colorScheme.surfaceContainer)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text("隐藏桌面图标", color = colorScheme.onBackground)
+                            Text("研发中，敬请期待", color = colorScheme.onBackground.copy(alpha = 0.5f))
+                        }
+                        androidx.compose.material3.Switch(
+                            checked = false,
+                            onCheckedChange = { onToggleHide() },
                         )
                     }
                 }
