@@ -3,6 +3,7 @@ package com.zayu.mizu.ui.screen.about
 import android.os.Build
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +17,8 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.add
@@ -27,6 +30,7 @@ import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
@@ -309,13 +313,12 @@ private fun AboutContent(
                     modifier = Modifier
                         .fillMaxSize()
                         .then(
-                            if (enableBlur) {
+                            if (effectBackground) {
                                 Modifier.textureBlur(
                                     backdrop = backdrop,
                                     shape = RoundedCornerShape(0.dp),
                                     blurRadius = 150f,
                                     colors = BlurColors(blendColors = logoBlend),
-                                    contentBlendMode = ComposeBlendMode.DstIn,
                                     enabled = true,
                                 )
                             } else Modifier
@@ -453,8 +456,22 @@ private fun AboutContent(
                     Card(
                         modifier = Modifier
                             .padding(horizontal = 12.dp)
-                            .clickable { expandedAck = !expandedAck },
-                        colors = CardDefaults.defaultColors(colorScheme.surfaceContainer),
+                            .then(
+                                if (enableBlur) {
+                                    Modifier.textureBlur(
+                                        backdrop = backdrop,
+                                        shape = RoundedCornerShape(16.dp),
+                                        blurRadius = 60f,
+                                        colors = BlurColors(blendColors = blendColors),
+                                        enabled = true,
+                                    )
+                                } else Modifier
+                            )
+                            .clickable(indication = null, interactionSource = remember { MutableInteractionSource() }) { expandedAck = !expandedAck },
+                        colors = CardDefaults.defaultColors(
+                            if (enableBlur) Color.Transparent else colorScheme.surfaceContainer,
+                            Color.Transparent,
+                        ),
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Row(
@@ -473,7 +490,11 @@ private fun AboutContent(
                                 enter = expandVertically(spring(stiffness = Spring.StiffnessLow)) + fadeIn(),
                                 exit = shrinkVertically(spring(stiffness = Spring.StiffnessLow)) + fadeOut()
                             ) {
-                                Column {
+                                Column(
+                                    modifier = Modifier
+                                        .heightIn(max = 400.dp)
+                                        .verticalScroll(rememberScrollState())
+                                ) {
                                     Spacer(Modifier.height(8.dp))
                                     Text(
                                         state.acknowledgments,
