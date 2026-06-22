@@ -1,30 +1,61 @@
-# MizuSU — 杂鱼~杂鱼~♪ 
+<p align="center">
+  <img src="icon.png" width="120" alt="MizuSU Icon" />
+</p>
 
-KernelSU 的第三方美化分支，仅对管理器 UI 进行个性化增强。
+<h1 align="center">MizuSU — 杂鱼~杂鱼~♪</h1>
 
-[![KernelSU](https://img.shields.io/badge/KernelSU-v3.2.4-blue)](https://github.com/tiann/KernelSU)
-[![License](https://img.shields.io/badge/License-GPL%20v3-green)](LICENSE)
+<p align="center">
+  <img src="https://img.shields.io/badge/Version-v4.1.3-ff69b4?style=flat-square" />
+  <img src="https://img.shields.io/badge/KernelSU-v3.2.4-blue?style=flat-square" />
+  <img src="https://img.shields.io/badge/License-GPL%20v3-green?style=flat-square" />
+  <img src="https://img.shields.io/badge/Android-8.0+-brightgreen?style=flat-square" />
+</p>
 
-## 关于
+<p align="center"><b>KernelSU 的第三方美化分支，仅对管理器 UI 进行个性化增强。</b></p>
 
-MizuSU (杂鱼MizuSU) 是一个基于 [SukiSU-Ultra](https://github.com/ShirkNeko/SukiSU-Ultra) 的 **UI 美化分支**。
+---
 
-**特别声明：本管理器分支仅对管理器 APP UI 进行美化改动，所有底层生态均完全遵循 KernelSU LKM 驱动走向，不做任何内核级别的修改。**
+## ✨ 特色
 
-## 特色功能
+| 功能 | 说明 |
+|------|------|
+| 🎨 **双主题** | Miuix（小米澎湃风格）/ Material 3，一键切换 |
+| 🖼️ **自定义图标** | 8 种预设图标 + 任意图片裁剪 + 桌面快捷方式 |
+| 💎 **液态玻璃** | 毛玻璃模糊卡片（Miuix 主题，可开关） |
+| 🔊 **启动音效** | 11 种随机杂鱼音效，可开关 |
+| ✂️ **图片裁剪** | 拖拽/缩放 + 九宫格辅助线 + 圆形/圆角方形输出 |
+| 🔧 **完整 KSU 管理** | Root 授权、模块管理、超级用户、SELinux 配置 |
 
-- 🎨 Miuix / Material 3 双主题支持
-- 🖼️ 自定义桌面图标（8 种预设 + 自定义图片裁剪）
-- ✨ 液态玻璃模糊效果
-- 🔊 随机启动音效
-- 🔧 完整的 KernelSU 管理功能
+## ⚠️ 声明
 
-## 致谢
+```
+杂鱼~杂鱼~♪ 这里是 KernelSU 的美化分支 MizuSU！
+只是换了身衣服而已，内核功能完全一样哦！
+本管理器仅供分支测试使用，遇到任何问题请转至官方 KernelSU~
+```
 
-感谢 [KernelSU](https://github.com/tiann/KernelSU) 近乎完美的开源生态。向 tiann、weishu 及全体贡献者致意！
+**本管理器分支仅对管理器 APP UI 进行美化改动，所有底层生态均完全遵循 KernelSU LKM 驱动走向，不做任何内核级别的修改。您所使用的一切 Root 功能均来自 KernelSU 官方驱动，安全可靠。**
 
-本管理器由酷安 @民間の人民の利益を取る 设想创作。
+## 📦 下载
 
-## 许可证
+前往 [Releases](https://github.com/helloxujia/mizusu/releases) 下载最新版本。
 
-GPL v3
+## 🏗️ 构建
+
+```bash
+git clone https://github.com/helloxujia/mizusu.git
+cd mizusu/manager
+./gradlew assembleDebug
+```
+
+## 🙏 致谢
+
+感谢 [KernelSU](https://github.com/tiann/KernelSU) 近乎完美的开源生态体系。向核心作者 **tiann**、**weishu** 及全体贡献者致以最崇高的敬意！
+
+MizuSU 由酷安 **@民間の人民の利益を取る** 设想与创作，古法编程 + AI Agent 共同完成。
+
+本项目纯属一时兴起，鱼粮由群内好心鱼鱼们赞助。愿开源精神永存 Σ(ﾟ∀ﾟﾉ)ﾉ
+
+## 📄 许可证
+
+GPL v3 © MizuSU
