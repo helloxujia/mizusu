@@ -8,4 +8,6 @@ __pycache__
 /dist
 /repack-config.json
 *.apk
+*.ko
+*.so
 screenshot.png
