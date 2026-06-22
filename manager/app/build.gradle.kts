@@ -98,6 +98,20 @@ android {
         }
     }
 
+    // 预编译的 libksud.so（Magica 越狱工具）
+    afterEvaluate {
+        tasks.matching { it.name.startsWith("merge") && it.name.contains("JniLibs") }.configureEach {
+            doLast {
+                val src = file("src/main/jniLibs/arm64-v8a/libksud.so")
+                val dst = file("$buildDir/intermediates/merged_jni_libs/debug/mergeDebugJniLibFolders/out/arm64-v8a/libksud.so")
+                if (src.exists()) {
+                    dst.parentFile.mkdirs()
+                    src.copyTo(dst, overwrite = true)
+                }
+            }
+        }
+    }
+
     dependenciesInfo {
         includeInApk = false
         includeInBundle = false

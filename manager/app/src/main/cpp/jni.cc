@@ -357,21 +357,9 @@ int fork_dont_care_and_exec_ksud(const char *path, const char *pkg) {
     if (pid < 0) {
         PLOGE("fork");
         return pid;
-    } else if (pid > 0) {
-        int status = 0;
-        if (TEMP_FAILURE_RETRY(waitpid(pid, &status, 0)) < 0) {
-            PLOGE("waitpid");
-            return -1;
-        }
-        if (!WIFEXITED(status) || WEXITSTATUS(status) != 0) {
-            LOGE("magica bootstrap child failed, status=%d", status);
-        }
-        return pid;
     }
-
-    if (setuid(0) != 0) {
-        PLOGE("setuid");
-        _exit(1);
+    if (pid > 0) {
+        return pid;
     }
 
     pid = fork();

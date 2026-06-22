@@ -52,7 +52,7 @@ object Natives {
     }
 
     init {
-        System.loadLibrary("kernelsu")
+        System.loadLibrary("mizusu")
     }
 
     val version: Int

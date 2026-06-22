@@ -107,12 +107,19 @@ bool is_lkm_mode() {
     return (legacy_get_info().second & KSU_GET_INFO_FLAG_LKM) != 0;
 }
 
+static bool ksud_available() {
+    // 越狱模式 fallback：检查 ksud 是否可执行
+    return access("/data/adb/ksu/bin/ksud", X_OK) == 0
+        || access("/data/adb/ksud", X_OK) == 0;
+}
+
 bool is_late_load_mode() {
     auto info = get_info();
     if (info.version > 0) {
         return (info.flags & KSU_GET_INFO_FLAG_LATE_LOAD) != 0;
     }
-    return false;
+    // 内核模块不可用时，检查 ksud（越狱模式）
+    return ksud_available();
 }
 
 bool is_manager() {
@@ -120,7 +127,9 @@ bool is_manager() {
     if (info.version > 0) {
         return (info.flags & KSU_GET_INFO_FLAG_MANAGER) != 0;
     }
-    return legacy_get_info().first > 0;
+    if (legacy_get_info().first > 0) return true;
+    // 越狱模式 fallback
+    return ksud_available();
 }
 
 bool is_pr_build() {

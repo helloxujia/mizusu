@@ -1,8 +1,12 @@
 package com.zayu.mizu.ui.screen.home
 import android.content.Context
 
+import android.content.ComponentName
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.widget.Toast
+import com.zayu.mizu.magica.BootCompletedReceiver
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -66,7 +70,6 @@ fun HomePager(
             loadingDialog.showLoading()
             context.startService(Intent(context, MagicaService::class.java))
             // Manager will be force-stopped and restarted by late-load on success.
-            // If that doesn't happen within timeout, jailbreak likely failed.
             scope.launch(Dispatchers.IO) {
                 delay(30_000)
                 withContext(Dispatchers.Main) {
