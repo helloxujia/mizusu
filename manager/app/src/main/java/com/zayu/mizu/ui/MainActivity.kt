@@ -417,10 +417,16 @@ class MainActivity : ComponentActivity() {
 
             // 快捷方式指向当前选中的图标风格（别名/MainActivity）
             val iconStyle = getSharedPreferences("settings", MODE_PRIVATE).getInt("icon_style", 0)
+            val base = MainActivity::class.java.name
             val aliasNames = arrayOf(
-                MainActivity::class.java.name,                    // 0
-                "${MainActivity::class.java.name}Alias",          // 1
-                "${MainActivity::class.java.name}Alias2", "Alias3", "Alias4", "Alias5", "Alias6", "Alias7"
+                base,             // 0
+                "${base}Alias",   // 1
+                "${base}Alias2",  // 2
+                "${base}Alias3",  // 3
+                "${base}Alias4",  // 4
+                "${base}Alias5",  // 5
+                "${base}Alias6",  // 6
+                "${base}Alias7"   // 7
             )
             val target = aliasNames.getOrElse(iconStyle) { MainActivity::class.java.name }
             val intent = Intent().apply {
