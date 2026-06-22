@@ -2,6 +2,7 @@ package com.zayu.mizu.ui
 
 import android.app.AlertDialog
 import android.content.ContentValues
+import android.content.ComponentName
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -414,8 +415,17 @@ class MainActivity : ComponentActivity() {
             val icon = IconCompat.createWithBitmap(iconBmp)
             val shortcutId = "custom_launcher"
 
-            val intent = Intent(this, MainActivity::class.java).apply {
+            // 快捷方式指向当前选中的图标风格（别名/MainActivity）
+            val iconStyle = getSharedPreferences("settings", MODE_PRIVATE).getInt("icon_style", 0)
+            val aliasNames = arrayOf(
+                MainActivity::class.java.name,                    // 0
+                "${MainActivity::class.java.name}Alias",          // 1
+                "${MainActivity::class.java.name}Alias2", "Alias3", "Alias4", "Alias5", "Alias6", "Alias7"
+            )
+            val target = aliasNames.getOrElse(iconStyle) { MainActivity::class.java.name }
+            val intent = Intent().apply {
                 action = Intent.ACTION_VIEW
+                component = ComponentName(this@MainActivity, target)
                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             }
 
