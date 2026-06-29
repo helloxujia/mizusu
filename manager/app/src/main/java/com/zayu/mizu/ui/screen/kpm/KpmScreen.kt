@@ -179,6 +179,11 @@ fun KpmScreen(
             actions = actions,
             bottomInnerPadding = bottomInnerPadding
         )
+        UiMode.MizuSU -> KpmMaterial(
+            viewModel = viewModel,
+            actions = actions,
+            bottomInnerPadding = bottomInnerPadding
+        )
     }
 }
 

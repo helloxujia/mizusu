@@ -37,5 +37,14 @@ fun SusPathsContent(
             onEditPath = { onEditPath?.invoke(it) },
             onReset = { onReset?.invoke() }
         )
+        UiMode.MizuSU -> SusPathsContentMaterial(
+            susPaths = susPaths,
+            isLoading = isLoading,
+            onAddPath = onAddPath,
+            onAddAppPath = onAddAppPath,
+            onRemovePath = onRemovePath,
+            onEditPath = { onEditPath?.invoke(it) },
+            onReset = { onReset?.invoke() }
+        )
     }
 }

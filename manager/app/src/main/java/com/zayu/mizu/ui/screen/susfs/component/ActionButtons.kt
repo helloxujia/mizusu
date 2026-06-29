@@ -36,5 +36,14 @@ fun BottomActionButtons(
             isLoading = isLoading,
             enabled = enabled
         )
+        UiMode.MizuSU -> BottomActionButtonsMaterial(
+            modifier = modifier,
+            primaryButtonText = primaryButtonText,
+            onPrimaryClick = onPrimaryClick,
+            secondaryButtonText = secondaryButtonText,
+            onSecondaryClick = onSecondaryClick,
+            isLoading = isLoading,
+            enabled = enabled
+        )
     }
 }

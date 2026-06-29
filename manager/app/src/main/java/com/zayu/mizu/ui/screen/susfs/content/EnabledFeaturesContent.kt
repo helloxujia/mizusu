@@ -21,5 +21,9 @@ fun EnabledFeaturesContent(
             enabledFeatures = enabledFeatures,
             onRefresh = onRefresh
         )
+        UiMode.MizuSU -> EnabledFeaturesContentMaterial(
+            enabledFeatures = enabledFeatures,
+            onRefresh = onRefresh
+        )
     }
 }

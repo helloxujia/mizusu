@@ -21,5 +21,10 @@ fun SlotSelectionDialog(
             onDismiss = onDismiss,
             onSlotSelected = onSlotSelected
         )
+        UiMode.MizuSU -> SlotSelectionDialogMaterial(
+            show = show,
+            onDismiss = onDismiss,
+            onSlotSelected = onSlotSelected
+        )
     }
 }

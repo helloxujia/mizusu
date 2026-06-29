@@ -23,5 +23,10 @@ fun BackupRestoreComponent(
             onLoadingChange = onLoadingChange,
             onConfigReload = onConfigReload
         )
+        UiMode.MizuSU -> BackupRestoreComponentMaterial(
+            isLoading = isLoading,
+            onLoadingChange = onLoadingChange,
+            onConfigReload = onConfigReload
+        )
     }
 }

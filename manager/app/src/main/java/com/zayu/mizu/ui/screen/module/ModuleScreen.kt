@@ -166,5 +166,13 @@ fun ModulePager(
             actions = actions,
             bottomInnerPadding = bottomInnerPadding,
         )
+
+        UiMode.MizuSU -> ModulePagerMaterial(
+            uiState = rawUiState,
+            confirmDialogState = rawUiState.confirmDialogState,
+            effect = rawUiState.effect,
+            actions = actions,
+            bottomInnerPadding = bottomInnerPadding,
+        )
     }
 }

@@ -25,5 +25,10 @@ fun FeatureStatusCard(
             onRefresh = onRefresh,
             modifier = modifier
         )
+        UiMode.MizuSU -> FeatureStatusCardMaterial(
+            feature = feature,
+            onRefresh = onRefresh,
+            modifier = modifier
+        )
     }
 }

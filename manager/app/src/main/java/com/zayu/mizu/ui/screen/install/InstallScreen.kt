@@ -157,7 +157,7 @@ fun InstallScreen(
 
     fun showMessage(message: String) {
         scope.launch {
-            if (uiMode == UiMode.Material) {
+            if (uiMode == UiMode.Material || uiMode == UiMode.MizuSU) {
                 snackbarHost.showSnackbar(message)
             } else {
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
@@ -332,5 +332,6 @@ fun InstallScreen(
     when (LocalUiMode.current) {
         UiMode.Miuix -> InstallScreenMiuix(state, actions)
         UiMode.Material -> InstallScreenMaterial(state, actions, snackbarHost)
+        UiMode.MizuSU -> InstallScreenMaterial(state, actions, snackbarHost)
     }
 }

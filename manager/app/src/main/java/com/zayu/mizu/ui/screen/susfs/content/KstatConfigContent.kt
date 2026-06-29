@@ -47,5 +47,18 @@ fun KstatConfigContent(
             onUpdateKstat = onUpdateKstat,
             onUpdateKstatFullClone = onUpdateKstatFullClone
         )
+        UiMode.MizuSU -> KstatConfigContentMaterial(
+            kstatConfigs = kstatConfigs,
+            addKstatPaths = addKstatPaths,
+            isLoading = isLoading,
+            onAddKstatStatically = onAddKstatStatically,
+            onAddKstat = onAddKstat,
+            onRemoveKstatConfig = onRemoveKstatConfig,
+            onEditKstatConfig = { onEditKstatConfig?.invoke(it) },
+            onRemoveAddKstat = onRemoveAddKstat,
+            onEditAddKstat = { onEditAddKstat?.invoke(it) },
+            onUpdateKstat = onUpdateKstat,
+            onUpdateKstatFullClone = onUpdateKstatFullClone
+        )
     }
 }

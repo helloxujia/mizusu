@@ -39,5 +39,15 @@ fun SlotInfoDialog(
             onUseUname = onUseUname,
             onUseBuildTime = onUseBuildTime
         )
+        UiMode.MizuSU -> SlotInfoDialogMaterial(
+            showDialog = showDialog,
+            onDismiss = onDismiss,
+            slotInfoList = slotInfoList,
+            currentActiveSlot = currentActiveSlot,
+            isLoadingSlotInfo = isLoadingSlotInfo,
+            onRefresh = onRefresh,
+            onUseUname = onUseUname,
+            onUseBuildTime = onUseBuildTime
+        )
     }
 }

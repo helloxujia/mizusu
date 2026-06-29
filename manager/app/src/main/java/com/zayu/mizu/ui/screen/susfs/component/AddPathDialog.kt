@@ -35,5 +35,14 @@ fun AddPathDialog(
             labelRes = labelRes,
             initialValue = initialValue
         )
+        UiMode.MizuSU -> AddPathDialogMaterial(
+            showDialog = showDialog,
+            onDismiss = onDismiss,
+            onConfirm = onConfirm,
+            isLoading = isLoading,
+            titleRes = titleRes,
+            labelRes = labelRes,
+            initialValue = initialValue
+        )
     }
 }

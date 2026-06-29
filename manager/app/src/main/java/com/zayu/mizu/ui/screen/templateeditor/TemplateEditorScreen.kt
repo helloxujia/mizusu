@@ -135,5 +135,10 @@ fun TemplateEditorScreen(template: TemplateViewModel.TemplateInfo, readOnly: Boo
             state = uiState,
             actions = actions,
         )
+
+        UiMode.MizuSU -> TemplateEditorScreenMaterial(
+            state = uiState,
+            actions = actions,
+        )
     }
 }

@@ -365,7 +365,7 @@ private fun getMarkdownColors(containerColor: androidx.compose.ui.graphics.Color
     val uiMode = LocalUiMode.current
 
     return when (uiMode) {
-        UiMode.Material -> {
+        UiMode.Material, UiMode.MizuSU -> {
             MarkdownColors(
                 bgCode = cssColorFromArgb(MaterialTheme.colorScheme.surfaceContainerHigh.toArgb()),
                 bgRowAlt = cssColorFromArgb(MaterialTheme.colorScheme.surfaceContainerLow.toArgb()),

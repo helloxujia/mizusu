@@ -117,5 +117,9 @@ fun ToolsScreen() {
             state = state,
             actions = actions
         )
+        UiMode.MizuSU -> ToolsMaterial(
+            state = state,
+            actions = actions
+        )
     }
 }

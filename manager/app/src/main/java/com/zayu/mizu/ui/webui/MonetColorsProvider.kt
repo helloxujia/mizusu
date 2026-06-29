@@ -28,6 +28,7 @@ object MonetColorsProvider {
         when (LocalUiMode.current) {
             UiMode.Miuix -> UpdateCssMiuix()
             UiMode.Material -> UpdateCssMaterial()
+            UiMode.MizuSU -> UpdateCssMaterial()
         }
     }
 

@@ -92,5 +92,11 @@ fun HomePager(
             actions = actions,
             bottomInnerPadding = bottomInnerPadding,
         )
+
+        UiMode.MizuSU -> HomePagerMizuSU(
+            state = uiState,
+            actions = actions,
+            bottomInnerPadding = bottomInnerPadding,
+        )
     }
 }

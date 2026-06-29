@@ -32,5 +32,13 @@ fun SusMapsContent(
             onEditSusMap = { onEditSusMap?.invoke(it) },
             onReset = { onReset?.invoke() }
         )
+        UiMode.MizuSU -> SusMapsContentMaterial(
+            susMaps = susMaps,
+            isLoading = isLoading,
+            onAddSusMap = onAddSusMap,
+            onRemoveSusMap = onRemoveSusMap,
+            onEditSusMap = { onEditSusMap?.invoke(it) },
+            onReset = { onReset?.invoke() }
+        )
     }
 }

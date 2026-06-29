@@ -37,5 +37,14 @@ fun AddAppPathDialog(
             onLoadApps = onLoadApps,
             existingSusPaths = existingSusPaths
         )
+        UiMode.MizuSU -> AddAppPathDialogMaterial(
+            showDialog = showDialog,
+            onDismiss = onDismiss,
+            onConfirm = onConfirm,
+            isLoading = isLoading,
+            apps = apps,
+            onLoadApps = onLoadApps,
+            existingSusPaths = existingSusPaths
+        )
     }
 }

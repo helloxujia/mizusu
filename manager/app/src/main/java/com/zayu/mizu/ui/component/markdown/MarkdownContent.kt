@@ -45,6 +45,7 @@ fun MarkdownContent(
     val containerColor = when (uiMode) {
         UiMode.Material -> MaterialTheme.colorScheme.surfaceContainerHigh
         UiMode.Miuix -> null
+        UiMode.MizuSU -> MaterialTheme.colorScheme.surfaceContainerHigh
     }
     Box(
         modifier = Modifier
@@ -74,6 +75,7 @@ fun MarkdownContent(
                 when (LocalUiMode.current) {
                     UiMode.Material -> LoadingIndicator()
                     UiMode.Miuix -> InfiniteProgressIndicator()
+                    UiMode.MizuSU -> LoadingIndicator()
                 }
             }
         }

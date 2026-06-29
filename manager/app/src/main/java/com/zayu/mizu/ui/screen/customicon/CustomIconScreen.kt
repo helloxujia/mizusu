@@ -16,5 +16,6 @@ fun CustomIconScreen(
     when (LocalUiMode.current) {
         UiMode.Miuix -> CustomIconMiuix(iconStyle, onSelect, onBack, onCustomUpload, onRestore, onToggleHide)
         UiMode.Material -> CustomIconMaterial(iconStyle, onSelect, onBack, onCustomUpload, onRestore, onToggleHide)
+        UiMode.MizuSU -> CustomIconMaterial(iconStyle, onSelect, onBack, onCustomUpload, onRestore, onToggleHide)
     }
 }

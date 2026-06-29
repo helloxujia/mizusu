@@ -41,7 +41,7 @@ fun FlashScreen(flashIt: FlashIt) {
 
     fun showMessage(message: String) {
         scope.launch {
-            if (uiMode == UiMode.Material) {
+            if (uiMode == UiMode.Material || uiMode == UiMode.MizuSU) {
                 snackbarHost.showSnackbar(message)
             } else {
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
@@ -98,5 +98,6 @@ fun FlashScreen(flashIt: FlashIt) {
     when (LocalUiMode.current) {
         UiMode.Miuix -> FlashScreenMiuix(state, actions)
         UiMode.Material -> FlashScreenMaterial(state, actions, snackbarHost)
+        UiMode.MizuSU -> FlashScreenMaterial(state, actions, snackbarHost)
     }
 }

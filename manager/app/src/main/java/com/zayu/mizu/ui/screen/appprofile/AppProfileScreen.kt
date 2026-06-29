@@ -76,7 +76,7 @@ fun AppProfileScreen(uid: Int) {
 
     fun showMessage(message: String) {
         scope.launch {
-            if (uiMode == UiMode.Material) {
+            if (uiMode == UiMode.Material || uiMode == UiMode.MizuSU) {
                 snackbarHost.showSnackbar(message)
             } else {
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
@@ -124,7 +124,7 @@ fun AppProfileScreen(uid: Int) {
                     showMessage(failToUpdateAppProfile)
                 } else {
                     profile = updatedProfile
-                    if (uiMode == UiMode.Material) {
+                    if (uiMode == UiMode.Material || uiMode == UiMode.MizuSU) {
                         viewModel.loadAppList()
                     }
                 }
@@ -139,6 +139,12 @@ fun AppProfileScreen(uid: Int) {
         )
 
         UiMode.Material -> AppProfileScreenMaterial(
+            state = state,
+            actions = actions,
+            snackBarHost = snackbarHost,
+        )
+
+        UiMode.MizuSU -> AppProfileScreenMaterial(
             state = state,
             actions = actions,
             snackBarHost = snackbarHost,

@@ -29,5 +29,12 @@ fun AddKstatStaticallyDialog(
             isLoading = isLoading,
             initialConfig = initialConfig
         )
+        UiMode.MizuSU -> AddKstatStaticallyDialogMaterial(
+            showDialog = showDialog,
+            onDismiss = onDismiss,
+            onConfirm = onConfirm,
+            isLoading = isLoading,
+            initialConfig = initialConfig
+        )
     }
 }

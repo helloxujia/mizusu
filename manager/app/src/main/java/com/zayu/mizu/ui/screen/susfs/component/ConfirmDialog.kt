@@ -32,5 +32,13 @@ fun ConfirmDialog(
             messageRes = messageRes,
             isLoading = isLoading
         )
+        UiMode.MizuSU -> ConfirmDialogMaterial(
+            showDialog = showDialog,
+            onDismiss = onDismiss,
+            onConfirm = onConfirm,
+            titleRes = titleRes,
+            messageRes = messageRes,
+            isLoading = isLoading
+        )
     }
 }

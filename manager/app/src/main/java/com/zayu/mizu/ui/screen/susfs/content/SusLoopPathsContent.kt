@@ -32,5 +32,13 @@ fun SusLoopPathsContent(
             onEditLoopPath = { onEditLoopPath?.invoke(it) },
             onReset = { onReset?.invoke() }
         )
+        UiMode.MizuSU -> SusLoopPathsContentMaterial(
+            susLoopPaths = susLoopPaths,
+            isLoading = isLoading,
+            onAddLoopPath = onAddLoopPath,
+            onRemoveLoopPath = onRemoveLoopPath,
+            onEditLoopPath = { onEditLoopPath?.invoke(it) },
+            onReset = { onReset?.invoke() }
+        )
     }
 }

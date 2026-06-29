@@ -9,5 +9,6 @@ fun SuSFSScreen() {
     when (LocalUiMode.current) {
         UiMode.Miuix -> SuSFSMiuix()
         UiMode.Material -> SuSFSMaterial()
+        UiMode.MizuSU -> SuSFSMaterial()
     }
 }

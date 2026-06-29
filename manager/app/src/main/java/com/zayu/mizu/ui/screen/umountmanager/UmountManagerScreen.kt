@@ -154,5 +154,9 @@ fun UmountManagerScreen() {
             state = state,
             actions = actions
         )
+        UiMode.MizuSU -> UmountManagerMaterial(
+            state = state,
+            actions = actions
+        )
     }
 }

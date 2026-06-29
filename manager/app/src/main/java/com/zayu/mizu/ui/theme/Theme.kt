@@ -71,6 +71,14 @@ object ThemeController {
             }
         }
 
+        // MizuSU mode: 默认启用动态配色以获得最佳二次元主题融合
+        if (uiMode == "mizusu") {
+            val colorMode = ColorMode.fromValue(colorModeValue)
+            if (!colorMode.isMonet) {
+                colorModeValue = colorMode.toMonetMode()
+            }
+        }
+
         val colorMode = ColorMode.fromValue(colorModeValue)
         val keyColor = prefs.getInt("key_color", 0)
         val paletteStyleStr = prefs.getString("color_style", PaletteStyle.TonalSpot.name)
@@ -107,6 +115,11 @@ fun KernelSUTheme(
         )
 
         UiMode.Material -> MaterialKernelSUTheme(
+            appSettings = currentAppSettings,
+            content = content
+        )
+
+        UiMode.MizuSU -> MizuSUKernelSUTheme(
             appSettings = currentAppSettings,
             content = content
         )

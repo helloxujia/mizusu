@@ -25,6 +25,12 @@ fun rememberAnyKernel3State(
         horizonKernelSummary = horizonKernelSummary,
         isAbDevice = isAbDevice
     )
+    UiMode.MizuSU -> rememberAnyKernel3StateMaterial(
+        installMethodState = installMethodState,
+        preselectedKernelUri = preselectedKernelUri,
+        horizonKernelSummary = horizonKernelSummary,
+        isAbDevice = isAbDevice
+    )
 }
 
 @Composable
@@ -42,6 +48,12 @@ fun KpmPatchSelectionDialog(
             onOptionSelected = onOptionSelected
         )
         UiMode.Material -> KpmPatchSelectionDialogMaterial(
+            show = show,
+            currentOption = currentOption,
+            onDismiss = onDismiss,
+            onOptionSelected = onOptionSelected
+        )
+        UiMode.MizuSU -> KpmPatchSelectionDialogMaterial(
             show = show,
             currentOption = currentOption,
             onDismiss = onDismiss,

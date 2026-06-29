@@ -36,7 +36,13 @@ fun SettingPager(
         onSetCheckModuleUpdate = viewModel::setCheckModuleUpdate,
         onOpenTheme = { navigator.push(Route.ColorPalette) },
         onSetUiModeIndex = { index ->
-            viewModel.setUiMode(if (index == 0) UiMode.Miuix.value else UiMode.Material.value)
+            viewModel.setUiMode(
+                when (index) {
+                    0 -> UiMode.Miuix.value
+                    1 -> UiMode.Material.value
+                    else -> UiMode.MizuSU.value
+                }
+            )
         },
         onOpenProfileTemplate = { navigator.push(Route.AppProfileTemplate) },
         onSetSuCompatMode = viewModel::setSuCompatMode,
@@ -67,6 +73,13 @@ fun SettingPager(
             isSusfsSupported = isSusfsSupported
         )
         UiMode.Material -> SettingPagerMaterial(
+            uiState = uiState,
+            actions = actions,
+            bottomInnerPadding = bottomInnerPadding,
+            isKpmAvailable = isKpmAvailable,
+            isSusfsSupported = isSusfsSupported
+        )
+        UiMode.MizuSU -> SettingPagerMaterial(
             uiState = uiState,
             actions = actions,
             bottomInnerPadding = bottomInnerPadding,

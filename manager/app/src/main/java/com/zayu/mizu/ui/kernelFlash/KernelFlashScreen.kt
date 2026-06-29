@@ -178,5 +178,13 @@ fun KernelFlashScreen(
             kpmPatchEnabled = kpmPatchEnabled,
             kpmUndoPatch = kpmUndoPatch
         )
+
+        UiMode.MizuSU -> KernelFlashMaterial(
+            state = flashState,
+            actions = actions,
+            logText = logText,
+            kpmPatchEnabled = kpmPatchEnabled,
+            kpmUndoPatch = kpmUndoPatch
+        )
     }
 }
