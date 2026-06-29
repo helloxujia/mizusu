@@ -111,7 +111,7 @@ GITHUB_COMMITS   := $(shell $(CURL_BIN) -sI "$(GITHUB_API_BASE)/commits?sha=$(RE
 LOCAL_COUNT     := $(if $(GITHUB_COMMITS),$(GITHUB_COMMITS),$(git_commit_count))
 KSU_VERSION     := 40817
 VERSION_TAG     := $(or $(KSU_GITHUB_VER),$(git_latest_tag),4.1.3)
-KSU_VERSION_FULL := $(if $(call git_short_sha),v$(VERSION_TAG)-$(call git_short_sha)@$(call git_branch),MizuSU-$(VERSION_TAG))
+KSU_VERSION_FULL := $(if $(call git_short_sha),v$(VERSION_TAG)-$(call git_short_sha)@$(call git_branch),v$(VERSION_TAG))
 $(info -- $(REPO_NAME) version: $(KSU_VERSION) [$(KSU_VERSION_FULL)])
 
 ccflags-y += -DKSU_VERSION=$(KSU_VERSION)
