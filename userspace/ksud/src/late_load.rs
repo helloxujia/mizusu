@@ -46,9 +46,9 @@ pub fn run(
     info!("late-load command triggered!");
     dump_process_info("late-load start");
 
-    // 1. Check if KernelSU is already loaded
+    // 1. Check if MizuSU is already loaded
     if ksuinit::has_kernelsu() {
-        info!("KernelSU already loaded, skip loading ko");
+        info!("MizuSU already loaded, skip loading ko");
     } else {
         // 2. Detect current KMI version
         let kmi = kmi.map_or_else(
@@ -83,7 +83,7 @@ pub fn run(
         dump_process_info("after load_module");
     }
 
-    // Apply spoofing via IOCTL if KernelSU was already loaded or for built-in
+    // Apply spoofing via IOCTL if MizuSU was already loaded or for built-in
     // This ensures it works even if it wasn't loaded just now
     if spoof_release.is_some() || spoof_version.is_some() {
         let r = spoof_release.map_or("", |s| s.as_str());
@@ -157,7 +157,7 @@ pub fn run(
     init_event::run_stage("boot-completed", false);
 
     // 14. Restart Manager so it gets a fresh ksu fd from the newly loaded kernel module
-    info!("Restarting KernelSU Manager {package_name}...");
+    info!("Restarting MizuSU Manager {package_name}...");
     let _ = Command::new("am")
         .args(["force-stop", package_name])
         .status();
