@@ -39,3 +39,8 @@ local.properties
 Thumbs.db
 .DS_Store
 CLAUDE.md
+
+# IDE
+.clangd
+.cursor/
+.modefix
