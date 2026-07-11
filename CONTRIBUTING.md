@@ -1,36 +1,23 @@
-# 贡献指南
+# 参与贡献
 
-## AI 辅助开发声明
+## 关于 AI 辅助
 
-本项目在开发过程中使用了 AI 编程助手（Claude Code）。
+写代码时用了 Claude Code 帮忙，提交会标注一下。
 
-### AI 使用规则
-1. **必须标注**: 使用 AI 辅助的代码在提交信息中添加 `Assisted-by: Claude Code`
-2. **人工审查**: 所有 AI 生成的代码必须经过人工理解、审查和测试
-3. **不得使用 AI**: 生成 Issue 报告、PR 描述、或社区回复
-4. **版权责任**: 贡献者对 AI 生成代码的版权合规负全部责任
+- 用了 AI 就在 commit 里写 `Assisted-by: Claude Code`
+- AI 写的代码我会先看懂再合进去
+- Issue 和 PR 描述自己写，别用 AI 生成
+- 版权问题自己负责
 
-### 不接受
-- 未经人工审查的纯 AI 生成代码
-- AI 生成的 Issue/PR 描述
-- 包含 `Co-authored-by: AI` 声明的提交
-
-## 提交规范
+## 提交格式
 
 ```
-feat/fix/chore: 简短描述
-
-详细说明
+feat/fix/chore: 改了什么
 
 Assisted-by: Claude Code
-Reviewed-by: <Your Name>
+Reviewed-by: 你的名字
 ```
 
 ## 许可证
 
-| 代码区域 | 许可证 |
-|----------|--------|
-| kernel/ | GPL-2.0-only |
-| 其他 | GPL-3.0-or-later |
-
-贡献代码即表示你同意在上述许可证下发布你的贡献。
+kernel/ 下是 GPL-2.0，其他代码是 GPL-3.0。提交代码等于同意这个许可证。

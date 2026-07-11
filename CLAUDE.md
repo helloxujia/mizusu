@@ -137,33 +137,17 @@ adb shell "su -c 'ksud boot-patch -b /dev/block/by-name/boot_a -m /sdcard/mizusu
 adb shell "su -c 'dd if=/data/local/tmp/out/kernelsu_patched_*.img of=/dev/block/by-name/boot_a bs=4096 && reboot'"
 ```
 
-## 合规规则（每次大改动后审计）
+## 合规规则
 
-> **规则**: 每次大改动后，必须执行合规审计，通过后方可提交测试。
+大改动后检查这几项，通过再提交：
 
-### 源码修改规范
-1. **新文件**：必须添加 SPDX 许可证头（内核 `GPL-2.0-only`，用户空间 `GPL-3.0-or-later`）
-2. **修改文件**：在头部添加修改注释（日期 + 描述）
-3. **禁止提交**：Token/密钥、AI 工具数据（`.claude/`, `.codex/`）、二进制产物（`.apk`, `.so`, `.ko`）、测试文件（`test*.zip`）
+- [ ] `.gitignore` 拦截了 AI 工具目录和密钥文件
+- [ ] `git diff --cached` 里没有 token、.claude.json、.apk/.so 等
+- [ ] 新文件加了 SPDX 头 (kernel: GPL-2.0-only, 其他: GPL-3.0)
+- [ ] 第三方库都记在 NOTICE 里
+- [ ] 图片是自己的，没有 CC 版权问题
 
-### 合规审计清单
-- [ ] `.gitignore` 有效 — 屏蔽 AI 工具数据/密钥/构建产物
-- [ ] 无 Token/密钥泄露 — `git diff --cached` 中无 `.github_token`, `.claude.json` 等
-- [ ] 无二进制产物 — 无 `.apk/.so/.ko/.zip`（assets 中的除外）
-- [ ] 新文件有 SPDX 头
-- [ ] 许可证文件完整: `LICENSE` (GPL-3.0) + `COPYING` (GPL-2.0)
-- [ ] 第三方依赖在 `NOTICE` 中列出
-- [ ] 无 CC BY-NC-SA 素材（已替换或已授权）
-
-### 提交格式
-```
-feat/fix/chore: 简短描述
-<空行>
-详细说明（如需要）
-<空行>
-Assisted-by: Claude Code
-Reviewed-by: Human
-```
+提交信息格式: `feat/fix/chore: 干了什么`
 
 ### 已完成
 - [x] 包名重塑 com.sukisu.ultra → com.zayu.mizu
