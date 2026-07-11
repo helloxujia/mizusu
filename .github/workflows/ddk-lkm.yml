@@ -40,7 +40,7 @@ jobs:
         EXPECTED_SIZE2: ${{ inputs.expected_size2 }}
         EXPECTED_HASH2: ${{ inputs.expected_hash2 }}
       run: |
-        git config --global --add safe.directory /__w/SukiSU-Ultra/SukiSU-Ultra
+        git config --global --add safe.directory /__w/helloxujia/mizusu
         cd kernel
 
         echo "=== Building kernelsu.ko for KMI: ${{ inputs.kmi }} ==="
