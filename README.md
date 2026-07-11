@@ -48,13 +48,16 @@ cd mizusu/manager
 ./gradlew assembleDebug
 ```
 
-## 🙏 致谢
+## 分工
 
-感谢 [KernelSU](https://github.com/tiann/KernelSU) 近乎完美的开源生态体系。向核心作者 **tiann**、**weishu** 及全体贡献者致以最崇高的敬意！
+- 功能开发：酷安 **@民間の人民の利益を取る**
+- UI 设计：酷安 **@小小汐颜**
 
-MizuSU 由酷安 **@民間の人民の利益を取る** 设想与创作，古法编程 + AI Agent 共同完成。
+## 致谢
 
-本项目纯属一时兴起，鱼粮由群内好心鱼鱼们赞助。愿开源精神永存 Σ(ﾟ∀ﾟﾉ)ﾉ
+本项目基于 [KernelSU](https://github.com/tiann/KernelSU) 和 [SukiSU-Ultra](https://github.com/SukiSU-Ultra/SukiSU-Ultra) 上游源码二次开发，仅供学习交流。致敬所有开源贡献的开发者同志。
+
+如有不妥之处，请联系本分支开发者沟通讨论。
 
 ## 📄 许可证
 
