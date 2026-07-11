@@ -21,6 +21,7 @@ hiddenapibypass = "6.1"
 appiconloader = "1.5.0"
 documentfile = "1.1.0"
 gson = "2.13.2"
+ate = "1.0.70"
 
 [plugins]
 agp-app = { id = "com.android.application", version.ref = "agp" }
@@ -85,3 +86,6 @@ appiconloader = { module = "me.zhanghai.android.appiconloader:appiconloader", ve
 
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 androidx-documentfile = { group = "androidx.documentfile", name = "documentfile", version.ref = "documentfile" }
+
+# 杂鱼工具箱 — 轻量终端模拟器 (纯Java, ~200KB, 零JNI依赖)
+jackpal-terminal-emulator = { module = "com.github.jackpal:Android-Terminal-Emulator", version.ref = "ate" }

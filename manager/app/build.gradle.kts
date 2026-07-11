@@ -226,4 +226,7 @@ dependencies {
     implementation(libs.material.kolor)
 
     implementation(libs.appiconloader)
+
+    // 杂鱼工具箱 — 轻量终端模拟器 (纯Java, ~200KB, 零JNI依赖)
+    implementation(libs.jackpal.terminal.emulator)
 }

@@ -1,13 +1,41 @@
-.idea
-CLAUDE.md
-AGENTS.md
-.DS_Store
-/target
-.cargo/config.toml
-__pycache__
-/dist
-/repack-config.json
+# ====== AI 工具数据 ======
+.claude/
+.claude.json
+.codex/
+.codex-session-delete/
+.cc-switch/
+
+# ====== 密钥 & 凭证 ======
+.github_token
+*.pem
+*.key
+credentials.json
+auth.json
+
+# ====== 构建产物 ======
 *.apk
+*.aab
+*.zip
 *.ko
 *.so
-screenshot.png
+!userspace/ksud/bin/**/*.so
+build/
+app/build/
+
+# ====== 临时文件 ======
+*.tmp
+*.bak
+*.log
+.idea/
+*.iml
+.vscode/
+
+# ====== IDE ======
+.idea/
+*.iml
+local.properties
+
+# ====== 系统文件 ======
+Thumbs.db
+.DS_Store
+CLAUDE.md

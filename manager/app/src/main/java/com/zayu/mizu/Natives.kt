@@ -35,9 +35,9 @@ object Natives {
 
     fun isVersionLessThan(v1Full: String, v2Full: String): Boolean {
         fun extractVersionParts(version: String): List<Int> {
-            val match = Regex("""v\d+(\.\d+)*""").find(version)
+            val match = Regex("""\d+(\.\d+)+""").find(version)
             val simpleVersion = match?.value ?: version
-            return simpleVersion.trimStart('v').split('.').map { it.toIntOrNull() ?: 0 }
+            return simpleVersion.split('.').map { it.toIntOrNull() ?: 0 }
         }
 
         val v1Parts = extractVersionParts(v1Full)

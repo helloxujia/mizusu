@@ -1,5 +1,6 @@
 package com.zayu.mizu.ui.screen.customicon
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -15,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -126,9 +128,14 @@ fun CustomIconMiuix(
             // ── 预设图标卡片区 ──
             itemsIndexed(icons) { index, preset ->
                 val selected = iconStyle == index
+                val scale by animateFloatAsState(if (selected) 1.05f else 1f)
 
                 Card(
                     modifier = Modifier
+                        .graphicsLayer {
+                            scaleX = scale
+                            scaleY = scale
+                        }
                         .clip(RoundedCornerShape(16.dp))
                         .clickable { onSelect(index) }
                         .then(

@@ -59,4 +59,5 @@ data class HomeActions(
     val onOpenUrl: (String) -> Unit,
     val onDismissWelcome: () -> Unit = {},
     val onJailbreakClick: () -> Unit = {},
+    val onFishToolboxClick: () -> Unit = {},
 )

@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"  android:minSdkVersion="33" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" android:minSdkVersion="28"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" android:minSdkVersion="34"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" android:minSdkVersion="34"/>
 
     <uses-sdk tools:overrideLibrary="top.yukonga.miuix.kmp.blur" />
 
@@ -214,6 +215,12 @@
                 <action android:name="com.zayu.mizu.magica.LAUNCH" />
             </intent-filter>
         </receiver>
+
+        <!-- 杂鱼工具箱终端服务 -->
+        <service
+            android:name=".ui.screen.fishtoolbox.FishTerminalService"
+            android:foregroundServiceType="specialUse"
+            android:exported="false" />
     </application>
 
 </manifest>

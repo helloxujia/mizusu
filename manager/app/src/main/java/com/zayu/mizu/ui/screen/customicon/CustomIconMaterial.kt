@@ -89,6 +89,7 @@ fun CustomIconMaterial(
 
             itemsIndexed(icons) { index, preset ->
                 val selected = iconStyle == index
+                val scale by animateFloatAsState(if (selected) 1.05f else 1f)
 
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -99,6 +100,12 @@ fun CustomIconMaterial(
                     Box(
                         modifier = Modifier
                             .size(72.dp)
+                            .graphicsLayer {
+                                scaleX = scale
+                                scaleY = scale
+                                clip = true
+                                shape = CircleShape
+                            }
                             .clip(CircleShape)
                             .then(
                                 if (selected)

@@ -589,4 +589,16 @@
     <string name="home_kernel_full_version">Kernel full version</string>
     <string name="settings_show_fullstatus">Show FullStatus</string>
     <string name="settings_show_fullstatus_summary">Display device FullStatus in home page info card</string>
+
+    <!-- 杂鱼工具箱 -->
+    <string name="fish_toolbox" translatable="false">杂鱼工具箱</string>
+    <string name="fish_toolbox_description">下载最新脚本并运行</string>
+    <string name="fish_toolbox_download">下载脚本</string>
+    <string name="fish_toolbox_checking">检查更新…</string>
+    <string name="fish_toolbox_downloading">下载中…</string>
+    <string name="fish_toolbox_latest">已是最新</string>
+    <string name="fish_toolbox_version">版本: %1$s</string>
+    <string name="fish_toolbox_download_success">下载完成</string>
+    <string name="fish_toolbox_download_failed">下载失败</string>
+    <string name="fish_toolbox_no_script">请先下载杂鱼工具箱脚本</string>
 </resources>

@@ -152,6 +152,20 @@ fun HomePagerMiuix(
                         if (state.checkUpdateEnabled) {
                             UpdateCard(state = state, actions = actions)
                         }
+                        if (state.isFullFeatured) {
+                            Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                onClick = actions.onFishToolboxClick,
+                                showIndication = true,
+                                pressFeedbackType = PressFeedbackType.Tilt,
+                            ) {
+                                BasicComponent(
+                                    title = "🐟 ${stringResource(R.string.fish_toolbox)}",
+                                    summary = stringResource(R.string.fish_toolbox_description),
+                                    insideMargin = PaddingValues(18.dp),
+                                )
+                            }
+                        }
                         InfoCard(systemInfo = state.systemInfo, showFullStatus = state.showFullStatus)
                         DonateCard(onOpenUrl = actions.onOpenUrl)
                         LearnMoreCard(onOpenUrl = actions.onOpenUrl)

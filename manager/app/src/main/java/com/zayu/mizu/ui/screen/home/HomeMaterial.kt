@@ -113,6 +113,9 @@ fun HomePagerMaterial(
             if (state.checkUpdateEnabled) {
                 UpdateCard(state = state, actions = actions)
             }
+            if (state.isFullFeatured) {
+                FishToolboxEntryCard(onClick = actions.onFishToolboxClick)
+            }
             InfoCard(systemInfo = state.systemInfo, showFullStatus = state.showFullStatus)
             DonateCard(onOpenUrl = actions.onOpenUrl)
             LearnMoreCard(onOpenUrl = actions.onOpenUrl)
@@ -407,6 +410,30 @@ private fun DonateCard(onOpenUrl: (String) -> Unit) {
                     text = stringResource(R.string.home_support_content),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.outline
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun FishToolboxEntryCard(onClick: () -> Unit) {
+    TonalCard(onClick = onClick) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text("🐟", style = MaterialTheme.typography.headlineMedium)
+            Spacer(Modifier.width(16.dp))
+            Column {
+                Text(stringResource(R.string.fish_toolbox), style = MaterialTheme.typography.titleSmall)
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    stringResource(R.string.fish_toolbox_description),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.outline,
                 )
             }
         }

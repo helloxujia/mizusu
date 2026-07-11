@@ -184,14 +184,13 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val prefs = getSharedPreferences("settings", MODE_PRIVATE)
+        val isManager = Natives.isManager
         val soundEnabled = prefs.getBoolean("enable_sound_effect", true)
-        if (soundEnabled) {
+        if (soundEnabled && isManager) {
             playRandomSound()
         }
         intentStateValue = savedInstanceState?.getInt(KEY_INTENT_STATE, 0) ?: 0
         intentStateFlow.value = intentStateValue
-
-        val isManager = Natives.isManager
         if (isManager && !Natives.requireNewKernel()) install()
 
         setContent {
@@ -380,6 +379,11 @@ class MainActivity : ComponentActivity() {
                                 entry<Route.SuSFS> { SuSFSScreen() }
                                 entry<Route.Tool> { ToolsScreen() }
                                 entry<Route.UmountManager> { UmountManagerScreen() }
+                                entry<Route.FishToolbox> {
+                                    com.zayu.mizu.ui.screen.fishtoolbox.FishToolboxScreen(
+                                        onBack = { navigator.pop() },
+                                    )
+                                }
                             }
                         )
                     }
