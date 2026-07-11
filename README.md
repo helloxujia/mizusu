@@ -11,34 +11,33 @@
   <img src="https://img.shields.io/badge/Android-8.0+-brightgreen?style=flat-square" />
 </p>
 
-<p align="center"><b>KernelSU 的第三方美化分支，仅对管理器 UI 进行个性化增强。</b></p>
+<p align="center"><b>KernelSU 第三方分支 · 美化 · 工具箱 · 一键配置</b></p>
 
 ---
 
-## ✨ 特色
+## 这是什么
 
-| 功能 | 说明 |
+MizuSU 是 KernelSU 的第三方美化分支。在保留 KSU 完整 Root 管理能力的基础上，重做了整套 UI，内置了常用工具箱和一键配置。
+
+- **美化** — 双主题（Miuix / Material 3）、8 套图标、毛玻璃效果、启动音效
+- **工具箱** — 内置杂鱼工具箱，设备检测、模块管理、伪装卸载一站式
+- **一键配置** — 常用配置开箱即用，不用再手动敲命令
+
+内核部分不动，所有 Root 能力来自 KernelSU 官方驱动。
+
+## 特色
+
+| 分类 | 功能 |
 |------|------|
-| 🎨 **双主题** | Miuix（小米澎湃风格）/ Material 3，一键切换 |
-| 🖼️ **自定义图标** | 8 种预设图标 + 任意图片裁剪 + 桌面快捷方式 |
-| 💎 **液态玻璃** | 毛玻璃模糊卡片（Miuix 主题，可开关） |
-| 🔊 **启动音效** | 11 种随机杂鱼音效，可开关 |
-| ✂️ **图片裁剪** | 拖拽/缩放 + 九宫格辅助线 + 圆形/圆角方形输出 |
-| 🔧 **完整 KSU 管理** | Root 授权、模块管理、超级用户、SELinux 配置 |
-
-## ⚠️ 声明
-
-```
-杂鱼~杂鱼~♪ 这里是 KernelSU 的美化分支 MizuSU！
-只是换了身衣服而已，内核功能完全一样哦！
-本管理器仅供分支测试使用，遇到任何问题请转至官方 KernelSU~
-```
-
-**本管理器分支仅对管理器 APP UI 进行美化改动，所有底层生态均完全遵循 KernelSU LKM 驱动走向，不做任何内核级别的修改。您所使用的一切 Root 功能均来自 KernelSU 官方驱动，安全可靠。**
+| 🎨 美化 | Miuix（小米澎湃）/ Material 3 双主题、液态玻璃、8 套图标 |
+| 🐟 工具箱 | 内置杂鱼工具箱：Luna/春秋/Hunter 检测、模块管理、伪装卸载 |
+| 🔧 一键配置 | 常用隐藏配置、SELinux 策略、SuSFS 开关 |
+| 🔊 音效 | 11 种随机启动音效，可关闭 |
+| 📱 兼容 | 支持 5.10 ~ 6.12 全 KMI，Android 8+ |
 
 ## 📦 下载
 
-前往 [Releases](https://github.com/helloxujia/mizusu/releases) 下载最新版本。
+[Releases](https://github.com/helloxujia/mizusu/releases)
 
 ## 🏗️ 构建
 
@@ -48,6 +47,12 @@ cd mizusu/manager
 ./gradlew assembleDebug
 ```
 
+## ⚠️ 声明
+
+本分支仅供学习交流。内核功能与 KernelSU 官方一致，遇到问题请优先排查官方版本。
+
+---
+
 ## 分工
 
 - 功能开发：酷安 **@民間の人民の利益を取る**
@@ -55,10 +60,14 @@ cd mizusu/manager
 
 ## 致谢
 
-本项目基于 [KernelSU](https://github.com/tiann/KernelSU) 和 [SukiSU-Ultra](https://github.com/SukiSU-Ultra/SukiSU-Ultra) 上游源码二次开发，仅供学习交流。致敬所有开源贡献的开发者同志。
+基于 [KernelSU](https://github.com/tiann/KernelSU) 和 [SukiSU-Ultra](https://github.com/SukiSU-Ultra/SukiSU-Ultra) 上游源码。致敬所有开源开发者同志。
 
-如有不妥之处，请联系本分支开发者沟通讨论。
+如有不妥，联系本分支开发者沟通。
+
+## 语言
+
+[English](docs/README.md) · [日本語](docs/ja/README.md) · [Русский](docs/ru/README.md) · [Türkçe](docs/tr/README.md) · [简体中文](docs/zh/README.md)
 
 ## 📄 许可证
 
-GPL v3 © MizuSU
+kernel/ — GPL-2.0 ｜ 其余 — GPL-3.0
