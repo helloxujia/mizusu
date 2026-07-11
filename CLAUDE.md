@@ -147,7 +147,7 @@ adb shell "su -c 'dd if=/data/local/tmp/out/kernelsu_patched_*.img of=/dev/block
 - [ ] 第三方库都记在 NOTICE 里
 - [ ] 图片是自己的，没有 CC 版权问题
 
-提交信息格式: `feat/fix/chore: 干了什么`
+提交信息格式: `feat/fix/chore: 干了什么`  (AI 辅助的加个 `AI-assisted` 就行)
 
 ### 已完成
 - [x] 包名重塑 com.sukisu.ultra → com.zayu.mizu

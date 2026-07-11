@@ -2,11 +2,11 @@
 
 ## 关于 AI 辅助
 
-写代码时用了 Claude Code 帮忙，提交会标注一下。
+写代码时会用 AI agent 辅助，提交里会标一下。
 
-- 用了 AI 就在 commit 里写 `Assisted-by: Claude Code`
+- 用了 AI 就在 commit 里写 `AI-assisted`
 - AI 写的代码我会先看懂再合进去
-- Issue 和 PR 描述自己写，别用 AI 生成
+- Issue 和 PR 描述自己写，别用 AI
 - 版权问题自己负责
 
 ## 提交格式
