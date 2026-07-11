@@ -64,9 +64,7 @@ cd mizusu/manager
 
 如有不妥，联系本分支开发者沟通。
 
-## 语言
-
-[English](docs/README.md) · [日本語](docs/ja/README.md) · [Русский](docs/ru/README.md) · [Türkçe](docs/tr/README.md) · [简体中文](docs/zh/README.md)
+[English](docs/README.md)
 
 ## 📄 许可证
 
